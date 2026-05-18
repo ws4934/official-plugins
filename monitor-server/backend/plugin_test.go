@@ -73,6 +73,9 @@ func (s fakeHostServices) Auth() plugincontract.AuthService { return nil }
 // BizCtx returns no bizctx service.
 func (s fakeHostServices) BizCtx() plugincontract.BizCtxService { return nil }
 
+// Cache returns no cache service.
+func (s fakeHostServices) Cache() plugincontract.CacheService { return nil }
+
 // Config returns the configured fake config service.
 func (s fakeHostServices) Config() plugincontract.ConfigService { return s.configSvc }
 

@@ -55,7 +55,7 @@ These declarations are reviewed and authorized by the host during plugin lifecyc
 
 ## Lifecycle Logging
 
-The dynamic sample implements `BeforeInstall`, `AfterInstall`, `BeforeUpgrade`, `AfterUpgrade`, `BeforeDisable`, `AfterDisable`, `BeforeUninstall`, `AfterUninstall`, `BeforeTenantDisable`, `AfterTenantDisable`, `BeforeTenantDelete`, `AfterTenantDelete`, `BeforeInstallModeChange`, and `AfterInstallModeChange` controller methods. `build-wasm` auto-discovers those methods and embeds lifecycle contracts in the WASM artifact. Each handler returns `ok=true` and writes a runtime log entry with the operation and available transition fields.
+The dynamic sample implements `BeforeInstall`, `AfterInstall`, `BeforeUpgrade`, `AfterUpgrade`, `BeforeDisable`, `AfterDisable`, `BeforeUninstall`, `AfterUninstall`, `BeforeTenantDisable`, `AfterTenantDisable`, `BeforeTenantDelete`, `AfterTenantDelete`, `BeforeInstallModeChange`, and `AfterInstallModeChange` controller methods. `linactl wasm` auto-discovers those methods and embeds lifecycle contracts in the WASM artifact. Each handler returns `ok=true` and writes a runtime log entry with the operation and available transition fields.
 
 ## Review Checklist
 

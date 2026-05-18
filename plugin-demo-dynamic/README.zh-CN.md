@@ -55,7 +55,7 @@ make wasm p=plugin-demo-dynamic
 
 ## 生命周期日志
 
-动态样例实现了 `BeforeInstall`、`AfterInstall`、`BeforeUpgrade`、`AfterUpgrade`、`BeforeDisable`、`AfterDisable`、`BeforeUninstall`、`AfterUninstall`、`BeforeTenantDisable`、`AfterTenantDisable`、`BeforeTenantDelete`、`AfterTenantDelete`、`BeforeInstallModeChange` 和 `AfterInstallModeChange` controller 方法。`build-wasm` 会自动发现这些方法，并将生命周期契约写入 WASM 产物。每个处理器都会返回 `ok=true`，并写入包含操作名称和可用迁移字段的运行时日志。
+动态样例实现了`BeforeInstall`、`AfterInstall`、`BeforeUpgrade`、`AfterUpgrade`、`BeforeDisable`、`AfterDisable`、`BeforeUninstall`、`AfterUninstall`、`BeforeTenantDisable`、`AfterTenantDisable`、`BeforeTenantDelete`、`AfterTenantDelete`、`BeforeInstallModeChange`和`AfterInstallModeChange` controller 方法。`linactl wasm`会自动发现这些方法，并将生命周期契约写入`WASM`产物。每个处理器都会返回`ok=true`，并写入包含操作名称和可用迁移字段的运行时日志。
 
 ## 审查要点
 
