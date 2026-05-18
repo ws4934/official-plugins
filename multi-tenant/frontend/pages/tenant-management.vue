@@ -27,6 +27,7 @@ import { useRouter } from 'vue-router';
 import { useVbenVxeGrid, vxeCheckboxChecked } from '#/adapter/vxe-table';
 import { $t } from '#/locales';
 import { useTenantStore } from '#/store';
+import { formatTimestamp } from '#/utils/time';
 
 import TenantModal from './components/tenant-modal.vue';
 import {
@@ -106,7 +107,12 @@ const [Grid, gridApi] = useVbenVxeGrid({
         title: $t('pages.common.status'),
         width: 150,
       },
-      { field: 'createdAt', title: $t('pages.common.createdAt'), width: 180 },
+      {
+        field: 'createdAt',
+        formatter: ({ cellValue }) => formatTimestamp(cellValue),
+        title: $t('pages.common.createdAt'),
+        width: 180,
+      },
       {
         field: 'action',
         fixed: 'right',

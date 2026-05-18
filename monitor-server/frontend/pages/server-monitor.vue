@@ -19,6 +19,7 @@ import { useDocumentVisibility, useIntervalFn } from '@vueuse/core';
 import { Progress, Table, Tooltip } from 'ant-design-vue';
 
 import { $t } from '#/locales';
+import { formatTimestamp } from '#/utils/time';
 import { getServerMonitor } from './server-client';
 
 defineOptions({ name: 'ServerMonitor' });
@@ -320,7 +321,7 @@ const diskColumns = [
                       {{ $t('plugin.monitor-server.fields.serviceStartTime') }}
                     </dt>
                     <dd class="mt-1 text-sm/6 text-foreground">
-                      {{ node.server?.startTime }}
+                      {{ formatTimestamp(node.server?.startTime) }}
                     </dd>
                   </div>
                   <div
@@ -491,7 +492,7 @@ const diskColumns = [
                       {{ $t('plugin.monitor-server.fields.bootTime') }}
                     </dt>
                     <dd class="mt-1 text-sm/6 text-foreground">
-                      {{ node.server?.bootTime }}
+                      {{ formatTimestamp(node.server?.bootTime) }}
                     </dd>
                   </div>
                   <div
@@ -501,7 +502,7 @@ const diskColumns = [
                       {{ $t('plugin.monitor-server.fields.collectAt') }}
                     </dt>
                     <dd class="mt-1 text-sm/6 text-foreground">
-                      {{ node.collectAt }}
+                      {{ formatTimestamp(node.collectAt) }}
                     </dd>
                   </div>
                 </dl>

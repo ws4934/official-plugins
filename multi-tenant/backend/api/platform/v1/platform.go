@@ -8,5 +8,5 @@ type TenantItem struct {
 	Name      string `json:"name" dc:"Tenant display name" eg:"Acme BU"`
 	Status    string `json:"status" dc:"Tenant lifecycle status" eg:"active"`
 	Remark    string `json:"remark" dc:"Tenant remark" eg:"Internal business unit"`
-	CreatedAt string `json:"createdAt" dc:"Tenant creation time" eg:"2026-05-10 09:00:00"`
+	CreatedAt *int64 `json:"createdAt" dc:"Tenant creation time as Unix timestamp in milliseconds" eg:"1778374800000"`
 }

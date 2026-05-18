@@ -10,6 +10,7 @@ import (
 
 	"github.com/gogf/gf/v2/errors/gerror"
 
+	"lina-core/pkg/apitime"
 	"lina-core/pkg/pluginbridge"
 )
 
@@ -85,7 +86,7 @@ func (s *serviceImpl) BuildHostCallDemoPayload(input *HostCallDemoInput) (*hostC
 		VisitCount: visitCount,
 		PluginID:   hostCallDemoPluginID(input),
 		Runtime: hostCallDemoRuntimePayload{
-			Now:  nowValue,
+			Now:  apitime.MilliFromString(nowValue),
 			UUID: uuidValue,
 			Node: nodeValue,
 		},

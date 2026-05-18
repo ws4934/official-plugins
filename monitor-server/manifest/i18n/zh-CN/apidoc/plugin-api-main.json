@@ -121,7 +121,7 @@
                   "dc": "系统架构"
                 },
                 "bootTime": {
-                  "dc": "系统启动时间"
+                  "dc": "系统启动时间，Unix 毫秒时间戳"
                 },
                 "hostname": {
                   "dc": "主机名"
@@ -130,7 +130,7 @@
                   "dc": "操作系统"
                 },
                 "startTime": {
-                  "dc": "服务启动时间"
+                  "dc": "服务启动时间，Unix 毫秒时间戳"
                 },
                 "uptime": {
                   "dc": "系统运行时长（秒）"
@@ -185,7 +185,7 @@
             "ServerNodeInfo": {
               "fields": {
                 "collectAt": {
-                  "dc": "数据上报时间"
+                  "dc": "数据上报时间，Unix 毫秒时间戳"
                 },
                 "cpu": {
                   "dc": "CPU指标"

@@ -20,7 +20,7 @@ type ServerMonitorRes struct {
 type ServerNodeInfo struct {
 	NodeName  string         `json:"nodeName" dc:"Node name (Hostname)" eg:"my-server"`
 	NodeIp    string         `json:"nodeIp" dc:"Node IP address" eg:"192.168.1.100"`
-	CollectAt string         `json:"collectAt" dc:"Data reporting time" eg:"2025-01-01 12:00:00"`
+	CollectAt *int64         `json:"collectAt" dc:"Data reporting time as Unix timestamp in milliseconds" eg:"1735689600000"`
 	Server    *ServerBasic   `json:"server" dc:"Server basic information" eg:""`
 	CPU       *CPUMetrics    `json:"cpu" dc:"CPU indicators" eg:""`
 	Memory    *MemoryMetrics `json:"memory" dc:"Memory metrics" eg:""`
@@ -34,9 +34,9 @@ type ServerBasic struct {
 	Hostname  string `json:"hostname" dc:"Hostname" eg:"my-server"`
 	OS        string `json:"os" dc:"Operating system" eg:"linux"`
 	Arch      string `json:"arch" dc:"System architecture" eg:"amd64"`
-	BootTime  string `json:"bootTime" dc:"System startup time" eg:"2025-01-01 00:00:00"`
+	BootTime  *int64 `json:"bootTime" dc:"System startup time as Unix timestamp in milliseconds" eg:"1735689600000"`
 	Uptime    uint64 `json:"uptime" dc:"System running time (seconds)" eg:"86400"`
-	StartTime string `json:"startTime" dc:"Service start time" eg:"2025-01-01 08:00:00"`
+	StartTime *int64 `json:"startTime" dc:"Service start time as Unix timestamp in milliseconds" eg:"1735689600000"`
 }
 
 // CPUMetrics represents CPU metrics.

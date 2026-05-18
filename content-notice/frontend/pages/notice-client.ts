@@ -11,8 +11,8 @@ export interface Notice {
   createdBy: number;
   createdByName: string;
   updatedBy: number;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: number | null;
+  updatedAt: number | null;
 }
 
 export interface NoticeListParams {

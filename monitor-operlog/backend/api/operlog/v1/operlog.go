@@ -1,11 +1,7 @@
 // This file defines shared operation-log response DTOs for the monitor-operlog API.
 package v1
 
-import (
-	"github.com/gogf/gf/v2/os/gtime"
-
-	"lina-plugin-monitor-operlog/backend/internal/model/operlogtype"
-)
+import "lina-plugin-monitor-operlog/backend/internal/model/operlogtype"
 
 // OperLogListItem exposes operation-log summary fields for list responses.
 type OperLogListItem struct {
@@ -25,7 +21,7 @@ type OperLogListItem struct {
 	Status             int                  `json:"status" dc:"Operation status: 0=success 1=failure" eg:"0"`
 	ErrorMsg           string               `json:"errorMsg" dc:"Error message" eg:""`
 	CostTime           int                  `json:"costTime" dc:"Time taken (milliseconds)" eg:"32"`
-	OperTime           *gtime.Time          `json:"operTime" dc:"Operating time" eg:"2025-01-01 12:00:00"`
+	OperTime           *int64               `json:"operTime" dc:"Operating time as Unix timestamp in milliseconds" eg:"1735689600000"`
 }
 
 // OperLogDetailItem exposes operation-log detail fields, including audited payloads.

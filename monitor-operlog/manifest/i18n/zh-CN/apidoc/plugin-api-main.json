@@ -183,7 +183,7 @@
                               "dc": "操作摘要"
                             },
                             "operTime": {
-                              "dc": "操作时间"
+                              "dc": "操作时间，Unix 毫秒时间戳"
                             },
                             "operType": {
                               "dc": "操作类型：create=新增 update=修改 delete=删除 export=导出 import=导入 other=其他"
@@ -253,7 +253,7 @@
                   "dc": "操作摘要"
                 },
                 "operTime": {
-                  "dc": "操作时间"
+                  "dc": "操作时间，Unix 毫秒时间戳"
                 },
                 "operType": {
                   "dc": "操作类型：create=新增 update=修改 delete=删除 export=导出 import=导入 other=其他"
@@ -375,7 +375,7 @@
                   "dc": "操作摘要"
                 },
                 "operTime": {
-                  "dc": "操作时间"
+                  "dc": "操作时间，Unix 毫秒时间戳"
                 },
                 "operType": {
                   "dc": "操作类型：create=新增 update=修改 delete=删除 export=导出 import=导入 other=其他"

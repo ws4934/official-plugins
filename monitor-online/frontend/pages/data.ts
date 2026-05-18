@@ -2,6 +2,7 @@ import type { VbenFormSchema } from '#/adapter/form';
 import type { VxeGridProps } from '#/adapter/vxe-table';
 
 import { $t } from '#/locales';
+import { formatTimestamp } from '#/utils/time';
 
 /** 查询表单schema */
 export function buildQuerySchema(): VbenFormSchema[] {
@@ -45,6 +46,7 @@ export function buildColumns(): VxeGridProps['columns'] {
     {
       title: $t('plugin.monitor-online.page.fields.loginTime'),
       field: 'loginTime',
+      formatter: ({ cellValue }) => formatTimestamp(cellValue),
     },
     {
       field: 'action',

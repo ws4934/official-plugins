@@ -10,6 +10,7 @@ import (
 	"path/filepath"
 	"strings"
 
+	"lina-core/pkg/apitime"
 	"lina-core/pkg/bizerr"
 )
 
@@ -298,8 +299,8 @@ func demoRecordEntityToPayload(record *demoRecordEntity) *demoRecordPayload {
 		Content:        record.Content,
 		AttachmentName: record.AttachmentName,
 		HasAttachment:  strings.TrimSpace(record.AttachmentPath) != "",
-		CreatedAt:      record.CreatedAt,
-		UpdatedAt:      record.UpdatedAt,
+		CreatedAt:      apitime.MilliFromString(record.CreatedAt),
+		UpdatedAt:      apitime.MilliFromString(record.UpdatedAt),
 	}
 }
 

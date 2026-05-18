@@ -3,6 +3,7 @@ package monitor
 import (
 	"context"
 
+	"lina-core/pkg/apitime"
 	v1 "lina-plugin-monitor-server/backend/api/monitor/v1"
 )
 
@@ -22,9 +23,9 @@ func (c *ControllerV1) ServerMonitor(ctx context.Context, req *v1.ServerMonitorR
 				Hostname:  node.Data.Server.Hostname,
 				OS:        node.Data.Server.OS,
 				Arch:      node.Data.Server.Arch,
-				BootTime:  node.Data.Server.BootTime,
+				BootTime:  apitime.MilliFromString(node.Data.Server.BootTime),
 				Uptime:    node.Data.Server.Uptime,
-				StartTime: node.Data.Server.StartTime,
+				StartTime: apitime.MilliFromString(node.Data.Server.StartTime),
 			}
 		}
 		if node.Data.CPU != nil {

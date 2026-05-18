@@ -26,6 +26,6 @@ type RecordItem struct {
 	Content        string `json:"content" dc:"Summary of record content" eg:"This record is used to demonstrate how the source plugin page operates the data table created by installing SQL."`
 	AttachmentName string `json:"attachmentName" dc:"The original file name of the attachment. If there is no attachment, an empty string is returned." eg:"plugin-demo-source-note.txt"`
 	HasAttachment  int    `json:"hasAttachment" dc:"Whether the attachment exists: 1=exists 0=does not exist" eg:"1"`
-	CreatedAt      string `json:"createdAt" dc:"Creation time" eg:"2026-04-16 18:00:00"`
-	UpdatedAt      string `json:"updatedAt" dc:"Update time" eg:"2026-04-16 18:05:00"`
+	CreatedAt      *int64 `json:"createdAt" dc:"Creation time as Unix timestamp in milliseconds" eg:"1776333600000"`
+	UpdatedAt      *int64 `json:"updatedAt" dc:"Update time as Unix timestamp in milliseconds" eg:"1776333900000"`
 }

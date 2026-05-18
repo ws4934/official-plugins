@@ -8,7 +8,7 @@ export interface LoginLog {
   browser: string;
   os: string;
   msg: string;
-  loginTime: string;
+  loginTime: number | null;
 }
 
 export interface LoginLogListParams {

@@ -3,14 +3,14 @@ import { requestClient } from '#/api/request';
 export interface ServerNodeInfo {
   nodeName: string;
   nodeIp: string;
-  collectAt: string;
+  collectAt: number | null;
   server: {
     hostname: string;
     os: string;
     arch: string;
-    bootTime: string;
+    bootTime: number | null;
     uptime: number;
-    startTime: string;
+    startTime: number | null;
   };
   cpu: {
     cores: number;

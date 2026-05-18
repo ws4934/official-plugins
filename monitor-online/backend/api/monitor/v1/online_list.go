@@ -27,5 +27,5 @@ type OnlineUserItem struct {
 	Ip        string `json:"ip" dc:"Login IP" eg:"127.0.0.1"`
 	Browser   string `json:"browser" dc:"Browser" eg:"Chrome 120.0"`
 	Os        string `json:"os" dc:"Operating system" eg:"Windows 10"`
-	LoginTime string `json:"loginTime" dc:"Login time" eg:"2025-01-01 12:00:00"`
+	LoginTime *int64 `json:"loginTime" dc:"Login time as Unix timestamp in milliseconds" eg:"1735689600000"`
 }

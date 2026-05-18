@@ -22,6 +22,6 @@ type DemoRecordItem struct {
 	Content        string `json:"content" dc:"Record content" eg:"This record demonstrates CRUD operations against the data table created by the dynamic plugin installation SQL."`
 	AttachmentName string `json:"attachmentName" dc:"The original file name of the attachment. If there is no attachment, an empty string is returned." eg:"plugin-demo-dynamic-note.txt"`
 	HasAttachment  bool   `json:"hasAttachment" dc:"Whether the current attachment exists: true=exists false=does not exist" eg:"true"`
-	CreatedAt      string `json:"createdAt" dc:"Record Creation time, automatically maintained by the default timestamp field of the sample data table" eg:"2026-04-16 10:00:00"`
-	UpdatedAt      string `json:"updatedAt" dc:"Record the last update time, automatically maintained by the default timestamp field of the sample data table" eg:"2026-04-16 10:05:00"`
+	CreatedAt      *int64 `json:"createdAt" dc:"Record creation time as Unix timestamp in milliseconds, automatically maintained by the default timestamp field of the sample data table" eg:"1776304800000"`
+	UpdatedAt      *int64 `json:"updatedAt" dc:"Record last update time as Unix timestamp in milliseconds, automatically maintained by the default timestamp field of the sample data table" eg:"1776305100000"`
 }

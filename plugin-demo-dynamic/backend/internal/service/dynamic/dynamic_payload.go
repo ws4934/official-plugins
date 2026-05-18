@@ -37,8 +37,8 @@ type demoRecordPayload struct {
 	Content        string `json:"content"`
 	AttachmentName string `json:"attachmentName"`
 	HasAttachment  bool   `json:"hasAttachment"`
-	CreatedAt      string `json:"createdAt"`
-	UpdatedAt      string `json:"updatedAt"`
+	CreatedAt      *int64 `json:"createdAt"`
+	UpdatedAt      *int64 `json:"updatedAt"`
 }
 
 // demoRecordDeletePayload defines the delete response returned by sample CRUD
@@ -81,7 +81,7 @@ type hostCallDemoPayload struct {
 
 // hostCallDemoRuntimePayload summarizes runtime host-call results.
 type hostCallDemoRuntimePayload struct {
-	Now  string `json:"now"`
+	Now  *int64 `json:"now"`
 	UUID string `json:"uuid"`
 	Node string `json:"node"`
 }

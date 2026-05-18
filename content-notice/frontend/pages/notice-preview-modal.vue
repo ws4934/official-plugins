@@ -11,6 +11,7 @@ import { noticeInfo } from './notice-client';
 import { DictTag } from '#/components/dict';
 import { $t } from '#/locales';
 import { useDictStore } from '#/store/dict';
+import { formatTimestamp } from '#/utils/time';
 
 const notice = ref<Notice | null>(null);
 const dictStore = useDictStore();
@@ -54,7 +55,7 @@ const [Modal, modalApi] = useVbenModal({
           {{ notice.createdByName || '-' }}
         </DescriptionsItem>
         <DescriptionsItem :label="$t('pages.common.createdAt')">
-          {{ notice.createdAt }}
+          {{ formatTimestamp(notice.createdAt) }}
         </DescriptionsItem>
       </Descriptions>
       <div class="notice-content prose mt-6 max-w-none" v-html="notice.content" />

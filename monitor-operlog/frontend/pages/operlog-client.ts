@@ -15,7 +15,7 @@ export interface OperLog {
   status: number;
   errorMsg: string;
   costTime: number;
-  operTime: string;
+  operTime: number | null;
 }
 
 export interface OperLogListParams {

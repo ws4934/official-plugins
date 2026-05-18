@@ -41,6 +41,22 @@ function formatTemplate(template, parameters = {}) {
   });
 }
 
+function formatTimestamp(value) {
+  if (value === null || value === undefined || value === "") {
+    return "-";
+  }
+  const date = new Date(Number(value));
+  if (Number.isNaN(date.getTime())) {
+    return "-";
+  }
+  const pad = (item) => String(item).padStart(2, "0");
+  return `${date.getFullYear()}-${pad(date.getMonth() + 1)}-${pad(
+    date.getDate(),
+  )} ${pad(date.getHours())}:${pad(date.getMinutes())}:${pad(
+    date.getSeconds(),
+  )}`;
+}
+
 function buildStandaloneI18nStorageKey() {
   if (window.crypto && typeof window.crypto.randomUUID === "function") {
     return `${standaloneI18nStoragePrefix}${window.crypto.randomUUID()}`;
@@ -1764,7 +1780,7 @@ export function mount(context) {
       const createdMeta = documentRef.createElement("div");
       createdMeta.className = "plugin-demo-dynamic-page__cell-meta";
       createdMeta.textContent = pageCopy.table.createdAt(
-        record.createdAt || "-",
+        formatTimestamp(record.createdAt),
       );
       titleCell.append(titleBlock, createdMeta);
 
@@ -1792,7 +1808,7 @@ export function mount(context) {
       const updatedCell = documentRef.createElement("td");
       const updatedText = documentRef.createElement("div");
       updatedText.className = "plugin-demo-dynamic-page__cell-meta";
-      updatedText.textContent = record.updatedAt || "-";
+      updatedText.textContent = formatTimestamp(record.updatedAt);
       updatedCell.append(updatedText);
 
       const actionCell = documentRef.createElement("td");

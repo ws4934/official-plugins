@@ -6,6 +6,7 @@
 package post
 
 import (
+	"lina-core/pkg/apitime"
 	postapi "lina-plugin-org-center/backend/api/post"
 	v1 "lina-plugin-org-center/backend/api/post/v1"
 	postsvc "lina-plugin-org-center/backend/internal/service/post"
@@ -34,7 +35,7 @@ func toAPIPostItem(entity *postsvc.PostEntity) v1.PostItem {
 		Sort:      entity.Sort,
 		Status:    entity.Status,
 		Remark:    entity.Remark,
-		CreatedAt: entity.CreatedAt,
-		UpdatedAt: entity.UpdatedAt,
+		CreatedAt: apitime.Milli(entity.CreatedAt),
+		UpdatedAt: apitime.Milli(entity.UpdatedAt),
 	}
 }

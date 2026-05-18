@@ -13,8 +13,8 @@ import (
 	"github.com/gogf/gf/v2/database/gdb"
 	"github.com/gogf/gf/v2/net/ghttp"
 	"github.com/gogf/gf/v2/os/gfile"
-	"github.com/gogf/gf/v2/os/gtime"
 
+	"lina-core/pkg/apitime"
 	"lina-core/pkg/bizerr"
 	"lina-core/pkg/logger"
 	plugincontract "lina-core/pkg/pluginservice/contract"
@@ -61,10 +61,10 @@ type RecordListItemOutput struct {
 	AttachmentName string
 	// HasAttachment reports whether the record owns one attachment.
 	HasAttachment bool
-	// CreatedAt is the formatted creation time.
-	CreatedAt string
-	// UpdatedAt is the formatted update time.
-	UpdatedAt string
+	// CreatedAt is the creation time as a Unix timestamp in milliseconds.
+	CreatedAt *int64
+	// UpdatedAt is the update time as a Unix timestamp in milliseconds.
+	UpdatedAt *int64
 }
 
 // RecordDetailOutput defines one demo record detail result.
@@ -400,17 +400,9 @@ func buildRecordListItemOutput(item *demoRecordEntity) *RecordListItemOutput {
 		Content:        item.Content,
 		AttachmentName: item.AttachmentName,
 		HasAttachment:  strings.TrimSpace(item.AttachmentPath) != "",
-		CreatedAt:      formatRecordTime(item.CreatedAt),
-		UpdatedAt:      formatRecordTime(item.UpdatedAt),
+		CreatedAt:      apitime.Milli(item.CreatedAt),
+		UpdatedAt:      apitime.Milli(item.UpdatedAt),
 	}
-}
-
-// formatRecordTime formats one optional GoFrame time value for API output.
-func formatRecordTime(value *gtime.Time) string {
-	if value == nil {
-		return ""
-	}
-	return value.String()
 }
 
 // stringPointer allocates one string pointer for optional DB mutation fields.

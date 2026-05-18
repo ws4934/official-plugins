@@ -11,6 +11,7 @@ import { DictTag } from '#/components/dict';
 import JsonPreview from '#/components/json-preview/index.vue';
 import { $t } from '#/locales';
 import { useDictStore } from '#/store/dict';
+import { formatTimestamp } from '#/utils/time';
 
 const dictStore = useDictStore();
 
@@ -125,7 +126,7 @@ function parseJson(str: string): any {
         {{ currentLog.costTime }} ms
       </DescriptionsItem>
       <DescriptionsItem :label="$t('plugin.monitor-operlog.fields.operTime')">
-        {{ currentLog.operTime }}
+        {{ formatTimestamp(currentLog.operTime) }}
       </DescriptionsItem>
     </Descriptions>
   </BasicDrawer>

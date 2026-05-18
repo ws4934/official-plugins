@@ -6,6 +6,7 @@
 package platform
 
 import (
+	"lina-core/pkg/apitime"
 	platformapi "lina-plugin-multi-tenant/backend/api/platform"
 	v1 "lina-plugin-multi-tenant/backend/api/platform/v1"
 	"lina-plugin-multi-tenant/backend/internal/service/impersonate"
@@ -37,6 +38,6 @@ func toAPITenant(item *tenantsvc.Entity) *v1.TenantItem {
 		Name:      item.Name,
 		Status:    item.Status,
 		Remark:    item.Remark,
-		CreatedAt: item.CreatedAt,
+		CreatedAt: apitime.MilliFromString(item.CreatedAt),
 	}
 }

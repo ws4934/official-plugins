@@ -100,7 +100,7 @@ type NodeMonitorData struct {
 	NodeName  string       `json:"nodeName"`
 	NodeIp    string       `json:"nodeIp"`
 	Data      *MonitorData `json:"data"`
-	CollectAt string       `json:"collectAt"`
+	CollectAt *int64       `json:"collectAt"`
 }
 
 // serverMonitorRecord reuses the plugin-local generated plugin_monitor_server entity.

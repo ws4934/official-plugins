@@ -3,6 +3,7 @@ package monitor
 import (
 	"context"
 
+	"lina-core/pkg/apitime"
 	v1 "lina-plugin-monitor-online/backend/api/monitor/v1"
 	monitorsvc "lina-plugin-monitor-online/backend/internal/service/monitor"
 )
@@ -21,10 +22,6 @@ func (c *ControllerV1) OnlineList(ctx context.Context, req *v1.OnlineListReq) (r
 
 	items := make([]*v1.OnlineUserItem, 0, len(out.Items))
 	for _, session := range out.Items {
-		loginTime := ""
-		if session.LoginTime != nil {
-			loginTime = session.LoginTime.Format("Y-m-d H:i:s")
-		}
 		items = append(items, &v1.OnlineUserItem{
 			TokenId:   session.TokenId,
 			Username:  session.Username,
@@ -32,7 +29,7 @@ func (c *ControllerV1) OnlineList(ctx context.Context, req *v1.OnlineListReq) (r
 			Ip:        session.Ip,
 			Browser:   session.Browser,
 			Os:        session.Os,
-			LoginTime: loginTime,
+			LoginTime: apitime.Milli(session.LoginTime),
 		})
 	}
 

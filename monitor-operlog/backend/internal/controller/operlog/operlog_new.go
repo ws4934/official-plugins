@@ -2,6 +2,7 @@
 package operlog
 
 import (
+	"lina-core/pkg/apitime"
 	operlogapi "lina-plugin-monitor-operlog/backend/api/operlog"
 	v1 "lina-plugin-monitor-operlog/backend/api/operlog/v1"
 	"lina-plugin-monitor-operlog/backend/internal/model/operlogtype"
@@ -40,7 +41,7 @@ func toAPIOperLogListItem(entity *operlogsvc.OperLogEntity) v1.OperLogListItem {
 		Status:             entity.Status,
 		ErrorMsg:           entity.ErrorMsg,
 		CostTime:           entity.CostTime,
-		OperTime:           entity.OperTime,
+		OperTime:           apitime.Milli(entity.OperTime),
 	}
 }
 

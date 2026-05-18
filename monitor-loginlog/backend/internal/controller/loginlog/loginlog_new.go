@@ -2,6 +2,7 @@
 package loginlog
 
 import (
+	"lina-core/pkg/apitime"
 	loginlogapi "lina-plugin-monitor-loginlog/backend/api/loginlog"
 	v1 "lina-plugin-monitor-loginlog/backend/api/loginlog/v1"
 	loginlogsvc "lina-plugin-monitor-loginlog/backend/internal/service/loginlog"
@@ -34,6 +35,6 @@ func toAPILoginLogItem(entity *loginlogsvc.LoginLogEntity) v1.LoginLogItem {
 		Browser:            entity.Browser,
 		Os:                 entity.Os,
 		Msg:                entity.Msg,
-		LoginTime:          entity.LoginTime,
+		LoginTime:          apitime.Milli(entity.LoginTime),
 	}
 }

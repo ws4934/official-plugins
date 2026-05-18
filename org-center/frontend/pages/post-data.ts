@@ -6,6 +6,7 @@ import { h } from 'vue';
 import { $t } from '#/locales';
 import { DictTag } from '#/components/dict';
 import { useDictStore } from '#/store/dict';
+import { formatTimestamp } from '#/utils/time';
 
 function resolveDictOptions(dictType: string) {
   return useDictStore().dictOptionsMap.get(dictType) || [];
@@ -65,6 +66,7 @@ export function buildColumns(): VxeGridProps['columns'] {
     {
       field: 'createdAt',
       title: $t('pages.common.createdAt'),
+      formatter: ({ cellValue }) => formatTimestamp(cellValue),
       minWidth: 180,
     },
     {

@@ -22,6 +22,7 @@ import (
 	netutil "github.com/shirou/gopsutil/v4/net"
 	"github.com/shirou/gopsutil/v4/process"
 
+	"lina-core/pkg/apitime"
 	"lina-core/pkg/dialect"
 	"lina-core/pkg/logger"
 	"lina-plugin-monitor-server/backend/internal/dao"
@@ -113,16 +114,11 @@ func (s *serviceImpl) GetLatest(ctx context.Context, nodeName string) ([]*NodeMo
 		if collectAt == nil {
 			collectAt = record.CreatedAt
 		}
-		collectAtString := ""
-		if collectAt != nil {
-			collectAtString = collectAt.Format("Y-m-d H:i:s")
-		}
-
 		result = append(result, &NodeMonitorData{
 			NodeName:  record.NodeName,
 			NodeIp:    record.NodeIp,
 			Data:      &data,
-			CollectAt: collectAtString,
+			CollectAt: apitime.Milli(collectAt),
 		})
 	}
 	return result, nil

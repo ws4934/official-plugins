@@ -12,7 +12,7 @@ export interface Dept {
   email: string;
   status: number;
   remark: string;
-  createdAt: string;
+  createdAt: number | null;
 }
 
 export interface DeptTree {

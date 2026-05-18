@@ -6,6 +6,7 @@
 package notice
 
 import (
+	"lina-core/pkg/apitime"
 	noticeapi "lina-plugin-content-notice/backend/api/notice"
 	v1 "lina-plugin-content-notice/backend/api/notice/v1"
 	noticesvc "lina-plugin-content-notice/backend/internal/service/notice"
@@ -37,7 +38,7 @@ func toAPINoticeItem(e *noticesvc.NoticeEntity) v1.NoticeItem {
 		Remark:    e.Remark,
 		CreatedBy: e.CreatedBy,
 		UpdatedBy: e.UpdatedBy,
-		CreatedAt: e.CreatedAt,
-		UpdatedAt: e.UpdatedAt,
+		CreatedAt: apitime.Milli(e.CreatedAt),
+		UpdatedAt: apitime.Milli(e.UpdatedAt),
 	}
 }

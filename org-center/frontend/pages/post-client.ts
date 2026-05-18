@@ -8,7 +8,7 @@ export interface Post {
   sort: number;
   status: number;
   remark: string;
-  createdAt: string;
+  createdAt: number | null;
 }
 
 export interface PostListParams {

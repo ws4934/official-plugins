@@ -6,6 +6,7 @@
 package dept
 
 import (
+	"lina-core/pkg/apitime"
 	deptapi "lina-plugin-org-center/backend/api/dept"
 	v1 "lina-plugin-org-center/backend/api/dept/v1"
 	deptsvc "lina-plugin-org-center/backend/internal/service/dept"
@@ -38,7 +39,7 @@ func toAPIDeptItem(entity *deptsvc.DeptEntity) v1.DeptItem {
 		Email:     entity.Email,
 		Status:    entity.Status,
 		Remark:    entity.Remark,
-		CreatedAt: entity.CreatedAt,
-		UpdatedAt: entity.UpdatedAt,
+		CreatedAt: apitime.Milli(entity.CreatedAt),
+		UpdatedAt: apitime.Milli(entity.UpdatedAt),
 	}
 }

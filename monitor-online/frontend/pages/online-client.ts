@@ -7,7 +7,7 @@ export interface OnlineUser {
   ip: string;
   browser: string;
   os: string;
-  loginTime: string;
+  loginTime: number | null;
 }
 
 export interface OnlineListResult {

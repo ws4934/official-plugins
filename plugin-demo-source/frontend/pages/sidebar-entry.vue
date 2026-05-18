@@ -15,6 +15,7 @@ import { useVbenModal } from "@vben/common-ui";
 
 import { useVbenVxeGrid } from "#/adapter/vxe-table";
 import { $t } from "#/locales";
+import { formatTimestamp } from "#/utils/time";
 import { Page } from "#/plugins/dynamic";
 import { downloadBlob } from "#/utils/download";
 
@@ -75,6 +76,7 @@ const [Grid, gridApi] = useVbenVxeGrid({
       },
       {
         field: "updatedAt",
+        formatter: ({ cellValue }) => formatTimestamp(cellValue),
         title: $t("plugin.plugin-demo-source.page.fields.updatedAt"),
         width: 180,
       },

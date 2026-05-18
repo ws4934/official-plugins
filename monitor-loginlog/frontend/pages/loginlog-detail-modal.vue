@@ -10,6 +10,7 @@ import { Descriptions, DescriptionsItem } from 'ant-design-vue';
 import { DictTag } from '#/components/dict';
 import { $t } from '#/locales';
 import { useDictStore } from '#/store/dict';
+import { formatTimestamp } from '#/utils/time';
 
 const dictStore = useDictStore();
 
@@ -68,7 +69,7 @@ const loginStatusDicts = computed(() => {
         </span>
       </DescriptionsItem>
       <DescriptionsItem :label="$t('plugin.monitor-loginlog.fields.loginTime')">
-        {{ loginInfo.loginTime }}
+        {{ formatTimestamp(loginInfo.loginTime) }}
       </DescriptionsItem>
     </Descriptions>
   </BasicModal>

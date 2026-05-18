@@ -6,6 +6,7 @@ import { h } from 'vue';
 import { $t } from '#/locales';
 import { DictTag } from '#/components/dict';
 import { useDictStore } from '#/store/dict';
+import { formatTimestamp } from '#/utils/time';
 
 function resolveDictOptions(dictType: string) {
   return useDictStore().getDictOptions(dictType);
@@ -86,6 +87,7 @@ export function buildColumns(): VxeGridProps['columns'] {
     {
       field: 'loginTime',
       title: $t('plugin.monitor-loginlog.fields.loginDate'),
+      formatter: ({ cellValue }) => formatTimestamp(cellValue),
       minWidth: 180,
       sortable: true,
     },

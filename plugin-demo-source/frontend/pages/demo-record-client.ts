@@ -6,8 +6,8 @@ export interface DemoRecordItem {
   content: string;
   attachmentName: string;
   hasAttachment: number;
-  createdAt: string;
-  updatedAt: string;
+  createdAt: number | null;
+  updatedAt: number | null;
 }
 
 export interface DemoRecordDetail {
