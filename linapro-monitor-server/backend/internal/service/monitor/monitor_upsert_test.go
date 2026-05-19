@@ -14,8 +14,35 @@ import (
 	"github.com/gogf/gf/v2/database/gdb"
 	"github.com/gogf/gf/v2/frame/g"
 
+	_ "lina-core/pkg/dbdriver"
 	"lina-plugin-linapro-monitor-server/backend/internal/dao"
 )
+
+// TestPostgreSQLDriverRegisteredForMonitorTests verifies the plugin test
+// package imports LinaPro's supported database driver registry before any
+// PostgreSQL integration test initializes GoFrame's ORM.
+func TestPostgreSQLDriverRegisteredForMonitorTests(t *testing.T) {
+	ctx := context.Background()
+	originalConfig := gdb.GetAllConfig()
+	if err := gdb.SetConfig(gdb.Config{
+		gdb.DefaultGroupName: gdb.ConfigGroup{{Link: "pgsql:postgres:postgres@tcp(127.0.0.1:1)/linapro?sslmode=disable"}},
+	}); err != nil {
+		t.Fatalf("configure PostgreSQL driver registration smoke failed: %v", err)
+	}
+	t.Cleanup(func() {
+		if err := gdb.SetConfig(originalConfig); err != nil {
+			t.Errorf("restore GoFrame database config failed: %v", err)
+		}
+	})
+
+	db, err := gdb.NewByGroup()
+	if err != nil {
+		t.Fatalf("expected PostgreSQL driver to be registered for monitor tests: %v", err)
+	}
+	if closeErr := db.Close(ctx); closeErr != nil {
+		t.Fatalf("close PostgreSQL driver registration smoke database failed: %v", closeErr)
+	}
+}
 
 // TestUpsertMonitorSnapshotWorksOnPostgreSQL verifies PostgreSQL runtime
 // persistence uses explicit Save conflict columns for monitor snapshots.
