@@ -168,6 +168,27 @@ function findRouteByTitle(
   return null;
 }
 
+async function expectCurrentUserRouteVisible(
+  adminApi: APIRequestContext,
+  title: string,
+  visible: boolean,
+) {
+  await expect
+    .poll(
+      async () => {
+        const routes = await fetchCurrentUserRoutes(adminApi);
+        return findRouteByTitle(routes, title) !== null;
+      },
+      {
+        message: visible
+          ? `菜单路由应包含 ${title}`
+          : `菜单路由不应包含 ${title}`,
+        timeout: 15_000,
+      },
+    )
+    .toBe(visible);
+}
+
 function repoRoot() {
   return path.resolve(process.cwd(), "../..");
 }
@@ -1294,6 +1315,12 @@ test.describe("TC-1 运行时 wasm 插件生命周期", () => {
 
     await pluginPage.gotoManage();
     await pluginPage.setPluginEnabled(bundledRuntimePluginID, false);
+    await expectCurrentUserRouteVisible(
+      adminApi!,
+      bundledRuntimeMenuName,
+      false,
+    );
+    await page.reload();
     await pluginPage.expectSidebarMenuHidden(bundledRuntimeMenuName);
     expect(bundledRuntimeRecordCountByTitle(updatedRecordTitle)).toBe(1);
 
