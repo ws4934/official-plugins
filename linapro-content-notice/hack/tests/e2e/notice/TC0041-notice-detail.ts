@@ -1,6 +1,6 @@
 import { test, expect } from '@host-tests/fixtures/auth';
 import { ensureSourcePluginEnabled } from '@host-tests/fixtures/plugin';
-import { config } from '@host-tests/fixtures/config';
+import { config, workspacePath } from '@host-tests/fixtures/config';
 import { LoginPage } from '@host-tests/pages/LoginPage';
 
 const API_BASE = `${config.baseURL}/api/v1`;
@@ -73,7 +73,7 @@ test.describe('TC0041 消息列表预览弹窗查看通知详情', () => {
       await loginPage.goto();
       await loginPage.loginAndWaitForRedirect('user001', config.adminPass);
 
-      await page.goto('/system/message');
+      await page.goto(workspacePath('/system/message'));
       await page.waitForLoadState('networkidle');
       await expect(page.getByText(title, { exact: true }).first()).toBeVisible({
         timeout: 10_000,

@@ -1,5 +1,5 @@
 const pluginID = "linapro-demo-dynamic";
-const apiBasePath = `/api/v1/extensions/${pluginID}`;
+const apiBasePath = `/x/${pluginID}/api/v1`;
 const defaultRecordPageSize = 10;
 const standaloneI18nStoragePrefix = `linapro:${pluginID}:standalone-i18n:`;
 

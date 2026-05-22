@@ -1,6 +1,6 @@
 import { test, expect } from '@host-tests/fixtures/auth';
 import { ensureSourcePluginEnabled } from '@host-tests/fixtures/plugin';
-import { config } from '@host-tests/fixtures/config';
+import { config, workspacePath } from '@host-tests/fixtures/config';
 import { LoginPage } from '@host-tests/pages/LoginPage';
 
 const API_BASE = `${config.baseURL}/api/v1`;
@@ -48,7 +48,7 @@ test.describe('TC0042 用户消息列表页面', () => {
       await loginPage.goto();
       await loginPage.loginAndWaitForRedirect('user001', config.adminPass);
 
-      await page.goto('/system/message');
+      await page.goto(workspacePath('/system/message'));
       await page.waitForLoadState('networkidle');
 
       const card = page.locator('.ant-card');
@@ -101,7 +101,7 @@ test.describe('TC0042 用户消息列表页面', () => {
       await loginPage.goto();
       await loginPage.loginAndWaitForRedirect('user001', config.adminPass);
 
-      await page.goto('/system/message');
+      await page.goto(workspacePath('/system/message'));
       await page.waitForLoadState('networkidle');
 
       const card = page.locator('.ant-card');

@@ -15,6 +15,7 @@ import {
 } from "@host-tests/support/api/job";
 import type { Page } from "@host-tests/support/playwright";
 import { LoginPage } from "@host-tests/pages/LoginPage";
+import { workspacePath } from "@host-tests/fixtures/config";
 import {
   execPgSQL,
   pgEscapeLiteral,
@@ -2022,7 +2023,7 @@ export async function scenarioTC0242(page: Page) {
           });
           await loginTenantUserInBrowser(page, user.username);
 
-          await page.goto("/system/config");
+          await page.goto(workspacePath("/system/config"));
           await waitForRouteReady(page, 15000);
           await expect(page.getByText(configKey, { exact: false })).toBeVisible({
             timeout: 15000,
@@ -2031,7 +2032,7 @@ export async function scenarioTC0242(page: Page) {
             0,
           );
 
-          await page.goto("/system/dict");
+          await page.goto(workspacePath("/system/dict"));
           await waitForRouteReady(page, 15000);
           await expect(page.getByText(dictType, { exact: false })).toBeVisible({
             timeout: 15000,

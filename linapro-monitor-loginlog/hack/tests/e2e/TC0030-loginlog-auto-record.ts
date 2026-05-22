@@ -1,7 +1,7 @@
 import { test, expect } from '@host-tests/fixtures/auth';
 import { ensureSourcePluginEnabled } from '@host-tests/fixtures/plugin';
 import { LoginPage } from '@host-tests/pages/LoginPage';
-import { config } from '@host-tests/fixtures/config';
+import { config, workspacePath } from '@host-tests/fixtures/config';
 import { waitForRouteReady } from '@host-tests/support/ui';
 
 test.describe('TC0030 登录日志自动记录', () => {
@@ -56,7 +56,7 @@ test.describe('TC0030 登录日志自动记录', () => {
           res.status() === 200,
         { timeout: 15000 },
       );
-      await page.goto('/monitor/loginlog');
+      await page.goto(workspacePath('/monitor/loginlog'));
       await responsePromise;
       await waitForRouteReady(page);
 
