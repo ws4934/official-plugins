@@ -7,9 +7,6 @@ import (
 	"testing"
 	"time"
 
-	"github.com/gogf/gf/v2/frame/g"
-	"github.com/gogf/gf/v2/os/gcfg"
-
 	"lina-core/pkg/pluginhost"
 	pluginconfig "lina-core/pkg/pluginservice/config"
 	plugincontract "lina-core/pkg/pluginservice/contract"
@@ -79,8 +76,14 @@ func (s fakeHostServices) Cache() plugincontract.CacheService { return nil }
 // Config returns the configured fake config service.
 func (s fakeHostServices) Config() plugincontract.ConfigService { return s.configSvc }
 
+// HostConfig returns no host config service.
+func (s fakeHostServices) HostConfig() plugincontract.HostConfigService { return nil }
+
 // I18n returns no i18n service.
 func (s fakeHostServices) I18n() plugincontract.I18nService { return nil }
+
+// Manifest returns no manifest service.
+func (s fakeHostServices) Manifest() plugincontract.ManifestService { return nil }
 
 // Notify returns no notify service.
 func (s fakeHostServices) Notify() plugincontract.NotifyService { return nil }
@@ -166,7 +169,7 @@ func TestCleanupSnapshotsSkipsNonPrimaryNode(t *testing.T) {
 
 // TestCleanupSnapshotsUsesInjectedServiceOnPrimaryNode verifies cleanup uses the shared service instance.
 func TestCleanupSnapshotsUsesInjectedServiceOnPrimaryNode(t *testing.T) {
-	setPluginTestConfigAdapter(t, `
+	configSvc := newPluginTestConfigService(t, `
 monitor:
   interval: 30s
   retentionMultiplier: 4
@@ -176,7 +179,7 @@ monitor:
 	registrar := &fakeCronRegistrar{
 		primary: true,
 		hostServices: fakeHostServices{
-			configSvc: pluginconfig.New(),
+			configSvc: configSvc,
 		},
 	}
 
@@ -192,19 +195,11 @@ monitor:
 	}
 }
 
-// setPluginTestConfigAdapter swaps the process config adapter for one test case.
-func setPluginTestConfigAdapter(t *testing.T, content string) {
+// newPluginTestConfigService builds a scoped plugin config service from artifact content.
+func newPluginTestConfigService(t *testing.T, content string) plugincontract.ConfigService {
 	t.Helper()
 
-	adapter, err := gcfg.NewAdapterContent(content)
-	if err != nil {
-		t.Fatalf("create content adapter: %v", err)
-	}
-
-	originalAdapter := g.Cfg().GetAdapter()
-	g.Cfg().SetAdapter(adapter)
-
-	t.Cleanup(func() {
-		g.Cfg().SetAdapter(originalAdapter)
-	})
+	return pluginconfig.NewFactory(t.TempDir(), t.TempDir()).
+		WithArtifactConfig("linapro-monitor-server", []byte(content)).
+		ForPlugin("linapro-monitor-server")
 }

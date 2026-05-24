@@ -28,8 +28,13 @@ const (
 	hostCallDemoCurrentStateNew    = "pending"
 	hostCallDemoCurrentStateReady  = "running"
 	hostCallDemoAnonymousUser      = "anonymous"
-	hostCallDemoSummaryMessage     = "Host service demo executed through runtime, storage, network, and data services."
+	hostCallDemoSummaryMessage     = "Host service demo executed through runtime, storage, network, data, config, and hostConfig services."
 	hostCallDemoNetworkPreview     = 120
+	hostCallDemoPluginGreetingKey  = "demo.greeting"
+	hostCallDemoPluginFeatureKey   = "demo.featureEnabled"
+	hostCallDemoWorkspaceKey       = "workspace.basePath"
+	hostCallDemoI18nDefaultKey     = "i18n.default"
+	hostCallDemoI18nEnabledKey     = "i18n.enabled"
 )
 
 // BuildHostCallDemoPayload executes the host service demo and returns the
@@ -72,6 +77,10 @@ func (s *serviceImpl) BuildHostCallDemoPayload(input *HostCallDemoInput) (*hostC
 	if err != nil {
 		return nil, err
 	}
+	configSummary, err := s.runHostCallDemoConfig()
+	if err != nil {
+		return nil, err
+	}
 	networkSummary := s.runHostCallDemoNetwork(input, uuidValue)
 
 	return &hostCallDemoPayload{
@@ -85,6 +94,7 @@ func (s *serviceImpl) BuildHostCallDemoPayload(input *HostCallDemoInput) (*hostC
 		Storage: *storageSummary,
 		Network: *networkSummary,
 		Data:    *dataSummary,
+		Config:  *configSummary,
 		Message: hostCallDemoSummaryMessage,
 	}, nil
 }
@@ -273,6 +283,55 @@ func (s *serviceImpl) runHostCallDemoNetwork(input *HostCallDemoInput, demoKey s
 	result.ContentType = response.ContentType
 	result.BodyPreview = buildHostCallDemoBodyPreview(response.Body)
 	return result
+}
+
+// runHostCallDemoConfig demonstrates reading plugin-owned config and
+// whitelisted public host config through dynamic-plugin host services.
+func (s *serviceImpl) runHostCallDemoConfig() (*hostCallDemoConfigPayload, error) {
+	if s.configSvc == nil {
+		return nil, gerror.New("config host service is unavailable")
+	}
+	if s.hostConfigSvc == nil {
+		return nil, gerror.New("host config host service is unavailable")
+	}
+
+	greeting, greetingFound, err := s.configSvc.String(hostCallDemoPluginGreetingKey)
+	if err != nil {
+		return nil, err
+	}
+	featureEnabled, featureEnabledFound, err := s.configSvc.Bool(hostCallDemoPluginFeatureKey)
+	if err != nil {
+		return nil, err
+	}
+	workspaceBasePath, workspaceBasePathFound, err := s.hostConfigSvc.String(hostCallDemoWorkspaceKey)
+	if err != nil {
+		return nil, err
+	}
+	i18nDefault, i18nDefaultFound, err := s.hostConfigSvc.String(hostCallDemoI18nDefaultKey)
+	if err != nil {
+		return nil, err
+	}
+	i18nEnabled, i18nEnabledFound, err := s.hostConfigSvc.Bool(hostCallDemoI18nEnabledKey)
+	if err != nil {
+		return nil, err
+	}
+
+	return &hostCallDemoConfigPayload{
+		Plugin: hostCallDemoPluginConfigPayload{
+			Greeting:            greeting,
+			GreetingFound:       greetingFound,
+			FeatureEnabled:      featureEnabled,
+			FeatureEnabledFound: featureEnabledFound,
+		},
+		HostConfig: hostCallDemoHostConfigPayload{
+			WorkspaceBasePath:      workspaceBasePath,
+			WorkspaceBasePathFound: workspaceBasePathFound,
+			I18nDefault:            i18nDefault,
+			I18nDefaultFound:       i18nDefaultFound,
+			I18nEnabled:            i18nEnabled,
+			I18nEnabledFound:       i18nEnabledFound,
+		},
+	}, nil
 }
 
 // hostCallDemoPluginID returns the normalized plugin identifier from the input.

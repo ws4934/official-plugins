@@ -5,6 +5,7 @@ import { rmSync } from "node:fs";
 import path from "node:path";
 
 import { test, expect } from '@host-tests/fixtures/auth';
+import { config } from '@host-tests/fixtures/config';
 import { DemoDynamicPage } from '../../pages/DemoDynamicPage';
 import {
   createAdminApiContext,
@@ -26,11 +27,7 @@ import { waitForRouteReady } from '@host-tests/support/ui';
 const pluginID = "linapro-demo-dynamic";
 const pluginMenuNamePattern = /Dynamic Plugin Demo|动态插件示例/u;
 const recordTable = "plugin_linapro_demo_dynamic_record";
-const publicBaseURL =
-  process.env.E2E_PUBLIC_BASE_URL ??
-  (
-    process.env.E2E_API_BASE_URL ?? "http://127.0.0.1:8080/api/v1/"
-  ).replace(/\/api\/v1\/?$/, "");
+const publicBaseURL = config.publicBaseURL;
 const repoRoot = path.resolve(process.cwd(), "../..");
 const legacyRuntimeArtifactPath = path.join(
   repoRoot,

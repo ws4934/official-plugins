@@ -54,6 +54,22 @@ func (c *Controller) HostCallDemo(
 			Updated:    payload.Data.Updated,
 			Deleted:    payload.Data.Deleted,
 		},
+		Config: &v1.HostCallDemoConfigRes{
+			Plugin: &v1.HostCallDemoPluginConfigRes{
+				Greeting:            payload.Config.Plugin.Greeting,
+				GreetingFound:       payload.Config.Plugin.GreetingFound,
+				FeatureEnabled:      payload.Config.Plugin.FeatureEnabled,
+				FeatureEnabledFound: payload.Config.Plugin.FeatureEnabledFound,
+			},
+			HostConfig: &v1.HostCallDemoHostConfigRes{
+				WorkspaceBasePath:      payload.Config.HostConfig.WorkspaceBasePath,
+				WorkspaceBasePathFound: payload.Config.HostConfig.WorkspaceBasePathFound,
+				I18nDefault:            payload.Config.HostConfig.I18nDefault,
+				I18nDefaultFound:       payload.Config.HostConfig.I18nDefaultFound,
+				I18nEnabled:            payload.Config.HostConfig.I18nEnabled,
+				I18nEnabledFound:       payload.Config.HostConfig.I18nEnabledFound,
+			},
+		},
 		Message: payload.Message,
 	}, nil
 }

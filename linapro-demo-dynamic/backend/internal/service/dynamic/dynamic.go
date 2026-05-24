@@ -88,22 +88,44 @@ type cronHostService interface {
 	Register(contract *pluginbridge.CronContract) error
 }
 
+// configHostService abstracts guest plugin-config host-call helpers used by
+// the sample service.
+type configHostService interface {
+	// String reads one plugin-owned runtime config value as a string.
+	String(key string) (string, bool, error)
+	// Bool reads one plugin-owned runtime config value as a bool.
+	Bool(key string) (bool, bool, error)
+}
+
+// hostConfigHostService abstracts whitelisted public host config reads used
+// by the sample service.
+type hostConfigHostService interface {
+	// String reads one whitelisted public host config value as a string.
+	String(key string) (string, bool, error)
+	// Bool reads one whitelisted public host config value as a bool.
+	Bool(key string) (bool, bool, error)
+}
+
 // serviceImpl implements Service.
 type serviceImpl struct {
-	runtimeSvc runtimeHostService
-	storageSvc storageHostService
-	httpSvc    networkHostService
-	cronSvc    cronHostService
-	dataSvc    *plugindb.DB
+	runtimeSvc    runtimeHostService
+	storageSvc    storageHostService
+	httpSvc       networkHostService
+	cronSvc       cronHostService
+	configSvc     configHostService
+	hostConfigSvc hostConfigHostService
+	dataSvc       *plugindb.DB
 }
 
 // New creates and returns a new dynamic plugin backend service.
 func New() Service {
 	return &serviceImpl{
-		runtimeSvc: newRuntimeHostService(),
-		storageSvc: newStorageHostService(),
-		httpSvc:    newNetworkHostService(),
-		cronSvc:    newCronHostService(),
-		dataSvc:    plugindb.Open(),
+		runtimeSvc:    newRuntimeHostService(),
+		storageSvc:    newStorageHostService(),
+		httpSvc:       newNetworkHostService(),
+		cronSvc:       newCronHostService(),
+		configSvc:     newConfigHostService(),
+		hostConfigSvc: newHostConfigHostService(),
+		dataSvc:       plugindb.Open(),
 	}
 }

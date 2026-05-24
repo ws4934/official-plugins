@@ -231,16 +231,29 @@
                 }
               },
               "meta": {
-                "dc": "演示动态插件通过统一宿主服务模型调用运行时、存储、网络和数据能力。该接口会写入运行时日志、读写隔离插件存储、访问受治理的上游地址，并对授权数据表执行结构化 CRUD。传入 skipNetwork=1 可跳过外部网络请求，便于离线验证。",
+                "dc": "演示动态插件通过统一宿主服务模型调用运行时、存储、网络、数据、插件配置和宿主公开配置能力。该接口会写入运行时日志、读写隔离插件存储、访问受治理的上游地址，对授权数据表执行结构化 CRUD，读取插件自有配置键，并读取白名单宿主公开配置键。传入 skipNetwork=1 可跳过外部网络请求，便于离线验证。",
                 "summary": "宿主调用能力演示",
                 "tags": "动态插件示例"
               },
               "schema": {
-                "dc": "演示动态插件通过统一宿主服务模型调用运行时、存储、网络和数据能力。该接口会写入运行时日志、读写隔离插件存储、访问受治理的上游地址，并对授权数据表执行结构化 CRUD。传入 skipNetwork=1 可跳过外部网络请求，便于离线验证。"
+                "dc": "演示动态插件通过统一宿主服务模型调用运行时、存储、网络、数据、插件配置和宿主公开配置能力。该接口会写入运行时日志、读写隔离插件存储、访问受治理的上游地址，对授权数据表执行结构化 CRUD，读取插件自有配置键，并读取白名单宿主公开配置键。传入 skipNetwork=1 可跳过外部网络请求，便于离线验证。"
+              }
+            },
+            "HostCallDemoConfigRes": {
+              "fields": {
+                "hostConfig": {
+                  "dc": "通过 hostConfig 宿主服务读取的白名单宿主公开配置值"
+                },
+                "plugin": {
+                  "dc": "通过 config 宿主服务读取的插件自有运行期配置值"
+                }
               }
             },
             "HostCallDemoRes": {
               "fields": {
+                "config": {
+                  "dc": "插件配置和白名单宿主公开配置读取摘要"
+                },
                 "data": {
                   "dc": "数据宿主服务执行摘要"
                 },
@@ -261,6 +274,44 @@
                 },
                 "visitCount": {
                   "dc": "当前累计访问次数，通过 runtime.state 宿主服务实现持久化计数"
+                }
+              }
+            },
+            "HostCallDemoHostConfigRes": {
+              "fields": {
+                "i18nDefault": {
+                  "dc": "白名单宿主 i18n.default 配置值"
+                },
+                "i18nDefaultFound": {
+                  "dc": "宿主公开配置视图中是否存在 i18n.default"
+                },
+                "i18nEnabled": {
+                  "dc": "白名单宿主 i18n.enabled 配置值"
+                },
+                "i18nEnabledFound": {
+                  "dc": "宿主公开配置视图中是否存在 i18n.enabled"
+                },
+                "workspaceBasePath": {
+                  "dc": "白名单宿主 workspace.basePath 配置值"
+                },
+                "workspaceBasePathFound": {
+                  "dc": "宿主公开配置视图中是否存在 workspace.basePath"
+                }
+              }
+            },
+            "HostCallDemoPluginConfigRes": {
+              "fields": {
+                "featureEnabled": {
+                  "dc": "从插件运行期 config.yaml 读取的 demo.featureEnabled 值"
+                },
+                "featureEnabledFound": {
+                  "dc": "插件运行期配置源中是否存在 demo.featureEnabled"
+                },
+                "greeting": {
+                  "dc": "从插件运行期 config.yaml 读取的 demo.greeting 值"
+                },
+                "greetingFound": {
+                  "dc": "插件运行期配置源中是否存在 demo.greeting"
                 }
               }
             },
@@ -434,7 +485,7 @@
               },
               "host_call_demo": {
                 "meta": {
-                  "dc": "演示动态插件通过统一宿主服务模型调用运行时、存储、网络和数据能力。该接口会写入运行时日志、读写隔离插件存储、访问受治理的上游地址，并对授权数据表执行结构化 CRUD。传入 skipNetwork=1 可跳过外部网络请求，便于离线验证。",
+                  "dc": "演示动态插件通过统一宿主服务模型调用运行时、存储、网络、数据、插件配置和宿主公开配置能力。该接口会写入运行时日志、读写隔离插件存储、访问受治理的上游地址，对授权数据表执行结构化 CRUD，读取插件自有配置键，并读取白名单宿主公开配置键。传入 skipNetwork=1 可跳过外部网络请求，便于离线验证。",
                   "summary": "宿主调用能力演示",
                   "tags": "动态插件示例"
                 },

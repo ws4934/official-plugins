@@ -101,6 +101,7 @@ type hostCallDemoPayload struct {
 	Storage    hostCallDemoStoragePayload `json:"storage"`
 	Network    hostCallDemoNetworkPayload `json:"network"`
 	Data       hostCallDemoDataPayload    `json:"data"`
+	Config     hostCallDemoConfigPayload  `json:"config"`
 	Message    string                     `json:"message"`
 }
 
@@ -164,6 +165,30 @@ type hostCallDemoNetworkPayload struct {
 	ContentType string `json:"contentType"`
 	BodyPreview string `json:"bodyPreview"`
 	Error       string `json:"error"`
+}
+
+// hostCallDemoConfigPayload summarizes plugin config and public host config reads.
+type hostCallDemoConfigPayload struct {
+	Plugin     hostCallDemoPluginConfigPayload `json:"plugin"`
+	HostConfig hostCallDemoHostConfigPayload   `json:"hostConfig"`
+}
+
+// hostCallDemoPluginConfigPayload summarizes plugin-owned config reads.
+type hostCallDemoPluginConfigPayload struct {
+	Greeting            string `json:"greeting"`
+	GreetingFound       bool   `json:"greetingFound"`
+	FeatureEnabled      bool   `json:"featureEnabled"`
+	FeatureEnabledFound bool   `json:"featureEnabledFound"`
+}
+
+// hostCallDemoHostConfigPayload summarizes whitelisted public host config reads.
+type hostCallDemoHostConfigPayload struct {
+	WorkspaceBasePath      string `json:"workspaceBasePath"`
+	WorkspaceBasePathFound bool   `json:"workspaceBasePathFound"`
+	I18nDefault            string `json:"i18nDefault"`
+	I18nDefaultFound       bool   `json:"i18nDefaultFound"`
+	I18nEnabled            bool   `json:"i18nEnabled"`
+	I18nEnabledFound       bool   `json:"i18nEnabledFound"`
 }
 
 // boolPointer allocates one boolean pointer for optional JSON response fields.

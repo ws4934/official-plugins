@@ -98,9 +98,8 @@ func registerRoutes(ctx context.Context, registrar pluginhost.HTTPRegistrar) err
 	)
 	if hostServices == nil ||
 		hostServices.Auth() == nil ||
-		hostServices.BizCtx() == nil ||
-		hostServices.Config() == nil {
-		return gerror.New("linapro-tenant-core routes require host auth, bizctx, and config services")
+		hostServices.BizCtx() == nil {
+		return gerror.New("linapro-tenant-core routes require host auth and bizctx services")
 	}
 	var (
 		membershipSvc     = membership.New(hostServices.BizCtx())
@@ -115,7 +114,7 @@ func registerRoutes(ctx context.Context, registrar pluginhost.HTTPRegistrar) err
 	}
 	pkgtenantcap.RegisterProvider(providerSvc)
 	var (
-		impersonateSvc = impersonate.New(hostServices.BizCtx(), hostServices.Config(), tenantSvc)
+		impersonateSvc = impersonate.New(hostServices.Auth(), hostServices.BizCtx(), tenantSvc)
 		authCtrl       = authcontroller.NewV1(hostServices.Auth(), membershipSvc, providerSvc)
 	)
 	routes.Group(routes.APIPrefix(), func(group pluginhost.RouteGroup) {
