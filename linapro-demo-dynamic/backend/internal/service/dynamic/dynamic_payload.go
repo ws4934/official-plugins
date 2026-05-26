@@ -70,11 +70,11 @@ type demoRecordEntity struct {
 }
 
 // demoRecordTimestampLayouts lists database timestamp encodings observed from
-// governed plugindb responses for the dynamic sample table.
+// governed data capability responses for the dynamic sample table.
 const demoRecordTimestampLayoutPrefix = "2006-01-02 15:04:05"
 
 // demoRecordCreateRecord defines the typed insert payload used for sample
-// records. Keeping plugindb mutation input typed avoids Go's wasm JSON encoder
+// records. Keeping data capability mutation input typed avoids Go's wasm JSON encoder
 // edge cases with directly constructed map[string]any values.
 type demoRecordCreateRecord struct {
 	Id             string `json:"id"`
@@ -102,6 +102,8 @@ type hostCallDemoPayload struct {
 	Network    hostCallDemoNetworkPayload `json:"network"`
 	Data       hostCallDemoDataPayload    `json:"data"`
 	Config     hostCallDemoConfigPayload  `json:"config"`
+	Org        hostCallDemoOrgPayload     `json:"org"`
+	Tenant     hostCallDemoTenantPayload  `json:"tenant"`
 	Message    string                     `json:"message"`
 }
 
@@ -189,6 +191,29 @@ type hostCallDemoHostConfigPayload struct {
 	I18nDefaultFound       bool   `json:"i18nDefaultFound"`
 	I18nEnabled            bool   `json:"i18nEnabled"`
 	I18nEnabledFound       bool   `json:"i18nEnabledFound"`
+}
+
+// hostCallDemoOrgPayload summarizes organization capability host-service reads.
+type hostCallDemoOrgPayload struct {
+	Available            bool   `json:"available"`
+	CapabilityID         string `json:"capabilityId"`
+	ActiveProvider       string `json:"activeProvider"`
+	Reason               string `json:"reason"`
+	AssignmentCount      int    `json:"assignmentCount"`
+	CurrentUserDeptCount int    `json:"currentUserDeptCount"`
+	CurrentUserPostCount int    `json:"currentUserPostCount"`
+}
+
+// hostCallDemoTenantPayload summarizes tenant capability host-service reads.
+type hostCallDemoTenantPayload struct {
+	Available       bool   `json:"available"`
+	CapabilityID    string `json:"capabilityId"`
+	ActiveProvider  string `json:"activeProvider"`
+	Reason          string `json:"reason"`
+	CurrentTenantID int    `json:"currentTenantId"`
+	PlatformBypass  bool   `json:"platformBypass"`
+	UserTenantCount int    `json:"userTenantCount"`
+	Visible         bool   `json:"visible"`
 }
 
 // boolPointer allocates one boolean pointer for optional JSON response fields.

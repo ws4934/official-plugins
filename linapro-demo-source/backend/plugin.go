@@ -9,7 +9,7 @@ import (
 	"github.com/gogf/gf/v2/net/ghttp"
 
 	"lina-core/pkg/logger"
-	"lina-core/pkg/pluginhost"
+	"lina-core/pkg/plugin/pluginhost"
 	plugindemosource "lina-plugin-linapro-demo-source"
 	democtrl "lina-plugin-linapro-demo-source/backend/internal/controller/demo"
 	demosvc "lina-plugin-linapro-demo-source/backend/internal/service/demo"
@@ -262,14 +262,14 @@ func logSourceInstallModeLifecycle(
 // host-owned APIs.
 func registerRoutes(ctx context.Context, registrar pluginhost.HTTPRegistrar) error {
 	var (
-		routes       = registrar.Routes()
-		middlewares  = routes.Middlewares()
-		hostServices = registrar.HostServices()
+		routes      = registrar.Routes()
+		middlewares = routes.Middlewares()
+		services    = registrar.Services()
 	)
-	if hostServices == nil || hostServices.I18n() == nil || hostServices.TenantFilter() == nil {
+	if services == nil || services.I18n() == nil || services.TenantFilter() == nil {
 		return gerror.New("linapro-demo-source routes require host i18n and tenant-filter services")
 	}
-	demoSvc := demosvc.New(hostServices.I18n(), hostServices.TenantFilter())
+	demoSvc := demosvc.New(services.I18n(), services.TenantFilter())
 	demoController := democtrl.NewV1(demoSvc)
 	routes.Group("/portal/linapro-demo-source", func(group pluginhost.RouteGroup) {
 		group.Middleware(

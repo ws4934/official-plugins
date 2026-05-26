@@ -78,12 +78,6 @@ dependencies:
       # Dependency plugin semantic-version range.
       # 依赖插件语义化版本范围。
       version: ">=0.1.0"
-      # Hard dependencies block lifecycle when unsatisfied.
-      # 硬依赖不满足时会阻断生命周期。
-      required: true
-      # `auto` lets the host install this discovered dependency before the target plugin.
-      # `auto` 表示宿主可在安装目标插件前自动安装该已发现依赖。
-      install: auto
 
 # Host service declaration list for requested host services, methods, and resource boundaries.
 # 插件宿主服务声明列表，用于申请调用宿主 service、method 与资源边界。
@@ -228,6 +222,25 @@ hostServices:
         - workspace.basePath
         - i18n.default
         - i18n.enabled
+  # Host service enum. `org` reads host organization capability projections for the current user.
+  # 宿主服务枚举。`org` 用于读取当前用户相关的宿主组织能力投影。
+  - service: org
+    methods:
+      - status
+      - available
+      - user_dept_assignments.list
+      - user_dept_ids.get
+      - user_post_ids.get
+  # Host service enum. `tenant` reads and validates tenant capability context for the current user.
+  # 宿主服务枚举。`tenant` 用于读取并校验当前用户相关的租户能力上下文。
+  - service: tenant
+    methods:
+      - status
+      - available
+      - current
+      - platform_bypass
+      - visible.ensure
+      - user_tenants.list
 # Plugin menu declaration list; the host syncs menus, button permissions, and route entries from it.
 # 插件菜单声明列表，宿主按该列表同步菜单、按钮权限和路由入口。
 menus:

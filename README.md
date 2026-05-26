@@ -79,7 +79,7 @@ apps/lina-plugins/<plugin-id>/
   README.zh-CN.md         Chinese guide
 ```
 
-`backend/internal/service/` is the only valid location for plugin business services. Do not create `backend/service/`. Dynamic plugins keep the same `backend/api/`, `backend/plugin.go`, `backend/internal/controller/`, and `backend/internal/service/` shape; their bridge files only adapt `WASM` and `pluginbridge` protocols.
+`backend/internal/service/` is the only valid location for plugin business services. Do not create `backend/service/`. Dynamic plugins keep the same `backend/api/`, `backend/plugin.go`, `backend/internal/controller/`, and `backend/internal/service/` shape; their bridge files only adapt `WASM` and `pluginbridge` protocols. Guest business capability clients must come from `lina-core/pkg/plugin/capability/guest`, not from the `pluginbridge` root package.
 
 ## Source Plugins
 
@@ -104,7 +104,7 @@ make -C apps/lina-plugins wasm
 make -C apps/lina-plugins wasm p=linapro-demo-dynamic
 ```
 
-Dynamic plugins must declare `type: dynamic` in `plugin.yaml`, keep `main.go` and `go.mod` as the guest build entry, and use `hostServices` to describe runtime capabilities and resource boundaries.
+Dynamic plugins must declare `type: dynamic` in `plugin.yaml`, keep `main.go` and `go.mod` as the guest build entry, use `hostServices` to describe runtime capabilities and resource boundaries, and import runtime, storage, data, cache, config, notify, cron, and related business host-service clients from `lina-core/pkg/plugin/capability/guest`.
 
 ## Host and Plugin Boundary
 

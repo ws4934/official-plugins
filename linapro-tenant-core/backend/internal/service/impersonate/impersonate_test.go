@@ -13,7 +13,7 @@ import (
 
 	"lina-core/pkg/bizerr"
 	_ "lina-core/pkg/dbdriver"
-	plugincontract "lina-core/pkg/pluginservice/contract"
+	plugincontract "lina-core/pkg/plugin/capability/contract"
 	pluginmodeldo "lina-plugin-linapro-tenant-core/backend/internal/model/do"
 	"lina-plugin-linapro-tenant-core/backend/internal/service/shared"
 	tenantsvc "lina-plugin-linapro-tenant-core/backend/internal/service/tenant"

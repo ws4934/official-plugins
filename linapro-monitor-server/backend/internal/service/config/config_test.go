@@ -8,8 +8,8 @@ import (
 	"testing"
 	"time"
 
-	configsvc "lina-core/pkg/pluginservice/config"
-	"lina-core/pkg/pluginservice/contract"
+	configsvc "lina-core/pkg/plugin/capability/config"
+	"lina-core/pkg/plugin/capability/contract"
 )
 
 // TestLoadUsesDefaultsWhenUnset verifies monitor config defaults when config is absent.

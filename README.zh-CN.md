@@ -79,7 +79,7 @@ apps/lina-plugins/<plugin-id>/
   README.zh-CN.md         中文说明
 ```
 
-`backend/internal/service/`是插件业务服务的唯一合法目录，禁止创建`backend/service/`。动态插件保持同样的`backend/api/`、`backend/plugin.go`、`backend/internal/controller/`和`backend/internal/service/`结构；桥接文件只负责适配`WASM`与`pluginbridge`协议。
+`backend/internal/service/`是插件业务服务的唯一合法目录，禁止创建`backend/service/`。动态插件保持同样的`backend/api/`、`backend/plugin.go`、`backend/internal/controller/`和`backend/internal/service/`结构；桥接文件只负责适配`WASM`与`pluginbridge`协议。`guest`业务能力 client 必须来自`lina-core/pkg/plugin/capability/guest`，不得从`pluginbridge`根包获取。
 
 ## 源码插件
 
@@ -104,7 +104,7 @@ make -C apps/lina-plugins wasm
 make -C apps/lina-plugins wasm p=linapro-demo-dynamic
 ```
 
-动态插件必须在`plugin.yaml`中声明`type: dynamic`，使用`main.go`和`go.mod`作为`guest`构建入口，并通过`hostServices`描述运行时能力和资源边界。
+动态插件必须在`plugin.yaml`中声明`type: dynamic`，使用`main.go`和`go.mod`作为`guest`构建入口，通过`hostServices`描述运行时能力和资源边界，并从`lina-core/pkg/plugin/capability/guest`导入 runtime、storage、data、cache、config、notify、cron 等业务宿主服务 client。
 
 ## 宿主与插件边界
 

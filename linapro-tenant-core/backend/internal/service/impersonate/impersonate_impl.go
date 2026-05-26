@@ -14,7 +14,7 @@ import (
 	"github.com/mssola/useragent"
 
 	"lina-core/pkg/bizerr"
-	plugincontract "lina-core/pkg/pluginservice/contract"
+	plugincontract "lina-core/pkg/plugin/capability/contract"
 	"lina-plugin-linapro-tenant-core/backend/internal/service/shared"
 )
 
