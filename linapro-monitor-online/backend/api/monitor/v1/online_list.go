@@ -21,11 +21,12 @@ type OnlineListRes struct {
 
 // OnlineUserItem represents an online user item.
 type OnlineUserItem struct {
-	TokenId   string `json:"tokenId" dc:"Session Token ID" eg:"abc123"`
-	Username  string `json:"username" dc:"Login account" eg:"admin"`
-	DeptName  string `json:"deptName" dc:"Department name" eg:"R&D Department"`
-	Ip        string `json:"ip" dc:"Login IP" eg:"127.0.0.1"`
-	Browser   string `json:"browser" dc:"Browser" eg:"Chrome 120.0"`
-	Os        string `json:"os" dc:"Operating system" eg:"Windows 10"`
-	LoginTime *int64 `json:"loginTime" dc:"Login time as Unix timestamp in milliseconds" eg:"1735689600000"`
+	TokenId    string `json:"tokenId" dc:"Session Token ID" eg:"abc123"`
+	Username   string `json:"username" dc:"Login account" eg:"admin"`
+	ClientType string `json:"clientType" dc:"User session client type. Allowed values: web, mobile, desktop, cli" eg:"web"`
+	DeptName   string `json:"deptName" dc:"Department name" eg:"R&D Department"`
+	Ip         string `json:"ip" dc:"Login IP" eg:"127.0.0.1"`
+	Browser    string `json:"browser" dc:"Browser" eg:"Chrome 120.0"`
+	Os         string `json:"os" dc:"Operating system" eg:"Windows 10"`
+	LoginTime  *int64 `json:"loginTime" dc:"Login time as Unix timestamp in milliseconds" eg:"1735689600000"`
 }

@@ -72,6 +72,9 @@
                 "browser": {
                   "dc": "浏览器"
                 },
+                "clientType": {
+                  "dc": "用户会话客户端类型。允许值：web、mobile、desktop、cli"
+                },
                 "deptName": {
                   "dc": "部门名称"
                 },
