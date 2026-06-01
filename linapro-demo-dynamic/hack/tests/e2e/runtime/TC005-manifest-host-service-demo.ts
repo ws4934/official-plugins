@@ -1,7 +1,7 @@
 import type { APIRequestContext } from "@host-tests/support/playwright";
 
 import { execFileSync } from "node:child_process";
-import { rmSync } from "node:fs";
+import { copyFileSync, existsSync, rmSync, statSync } from "node:fs";
 import path from "node:path";
 
 import { test, expect } from "@host-tests/fixtures/auth";
@@ -22,6 +22,19 @@ const pluginID = "linapro-demo-dynamic";
 const sourcePluginID = "linapro-demo-source";
 const pluginMenuNamePattern = /Dynamic Plugin Demo|动态插件示例/u;
 const repoRoot = path.resolve(process.cwd(), "../..");
+const pluginDir = path.join(repoRoot, "apps", "lina-plugins", pluginID);
+const manifestConfigPath = path.join(
+  pluginDir,
+  "manifest",
+  "config",
+  "config.yaml",
+);
+const manifestConfigTemplatePath = path.join(
+  pluginDir,
+  "manifest",
+  "config",
+  "config.example.yaml",
+);
 const legacyRuntimeArtifactPath = path.join(
   repoRoot,
   "apps",
@@ -36,13 +49,37 @@ let originalInstalled = 0;
 let originalEnabled = 0;
 let originalSourceInstalled = 0;
 let originalSourceEnabled = 0;
+let createdManifestConfigFixture = false;
 
 function ensureRuntimePluginArtifact() {
+  createdManifestConfigFixture = prepareIgnoredManifestConfigFixture();
   execFileSync("make", ["wasm", `p=${pluginID}`, "out=../../temp/output"], {
     cwd: repoRoot,
     stdio: "inherit",
   });
   rmSync(legacyRuntimeArtifactPath, { force: true });
+}
+
+function prepareIgnoredManifestConfigFixture() {
+  if (existsSync(manifestConfigPath)) {
+    if (statSync(manifestConfigPath).isDirectory()) {
+      throw new Error(
+        `dynamic demo manifest config path is a directory: ${manifestConfigPath}`,
+      );
+    }
+    return false;
+  }
+
+  copyFileSync(manifestConfigTemplatePath, manifestConfigPath);
+  return true;
+}
+
+function cleanupIgnoredManifestConfigFixture() {
+  if (!createdManifestConfigFixture) {
+    return;
+  }
+  rmSync(manifestConfigPath, { force: true });
+  createdManifestConfigFixture = false;
 }
 
 async function ensurePluginInstalledAndEnabled() {
@@ -137,16 +174,27 @@ async function restoreSourcePluginState() {
 
 test.describe("TC-5 Manifest host service demo", () => {
   test.beforeAll(async () => {
-    ensureRuntimePluginArtifact();
-    adminApi = await createAdminApiContext();
-    await ensurePluginInstalledAndEnabled();
+    try {
+      ensureRuntimePluginArtifact();
+      adminApi = await createAdminApiContext();
+      await ensurePluginInstalledAndEnabled();
+    } catch (error) {
+      cleanupIgnoredManifestConfigFixture();
+      throw error;
+    }
   });
 
   test.afterAll(async () => {
+    const api = adminApi as APIRequestContext | undefined;
     try {
-      await restorePluginState();
+      if (api) {
+        await restorePluginState();
+      }
     } finally {
-      await adminApi.dispose();
+      cleanupIgnoredManifestConfigFixture();
+      if (api) {
+        await api.dispose();
+      }
     }
   });
 
