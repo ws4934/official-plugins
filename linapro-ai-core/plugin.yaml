@@ -1,6 +1,6 @@
 id: linapro-ai-core
 name: AI Hub
-version: v0.1.25
+version: v0.1.0
 type: source
 scope_nature: platform_only
 supports_multi_tenant: false
