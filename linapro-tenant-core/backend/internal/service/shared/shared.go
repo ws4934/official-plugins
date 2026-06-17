@@ -13,6 +13,7 @@ import (
 const (
 	TableTenant     = "plugin_linapro_tenant_core_tenant"
 	TableMembership = "plugin_linapro_tenant_core_user_membership"
+	TableDomain     = "plugin_linapro_tenant_core_domain"
 )
 
 // TenantStatus is the tenant lifecycle status stored by the plugin.
@@ -25,6 +26,16 @@ const (
 	TenantStatusSuspended TenantStatus = "suspended"
 )
 
+// DomainStatus is the domain mapping lifecycle status stored by the plugin.
+type DomainStatus string
+
+const (
+	// DomainStatusActive marks a domain mapping usable for tenant resolution.
+	DomainStatusActive DomainStatus = "active"
+	// DomainStatusDisabled blocks a domain mapping from resolving a tenant.
+	DomainStatusDisabled DomainStatus = "disabled"
+)
+
 // Resolver names supported by the plugin-owned resolution chain.
 const (
 	ResolverOverride  = "override"
@@ -32,6 +43,7 @@ const (
 	ResolverSession   = "session"
 	ResolverHeader    = "header"
 	ResolverSubdomain = "subdomain"
+	ResolverDomain    = "domain"
 	ResolverDefault   = "default"
 )
 
@@ -42,7 +54,8 @@ const (
 // audited tenant impersonation. JWT remains authoritative for normal
 // authenticated requests, so header and subdomain values are only login-stage
 // hints and can never override a signed tenant claim. Session keeps browser
-// continuity after tenant selection, while default is the final membership
+// continuity after tenant selection. Domain matches verified custom domains to
+// a tenant for host-based resolution, while default is the final membership
 // fallback used when the request still has no tenant decision.
 var defaultResolverChain = []string{
 	ResolverOverride,
@@ -50,7 +63,17 @@ var defaultResolverChain = []string{
 	ResolverSession,
 	ResolverHeader,
 	ResolverSubdomain,
+	ResolverDomain,
 	ResolverDefault,
+}
+
+// storefrontResolverChain is the host-only resolution order used for anonymous
+// storefront requests. It contains only host-based resolvers and intentionally
+// excludes the membership default, so an unmatched host never falls back to the
+// platform tenant.
+var storefrontResolverChain = []string{
+	ResolverDomain,
+	ResolverSubdomain,
 }
 
 // Resolver behavior values.
@@ -82,7 +105,8 @@ const (
 	// SingleCardinality allows at most one active tenant membership per user.
 	SingleCardinality = "single"
 	// DefaultRootDomain is empty for now, which disables subdomain tenant
-	// resolution. Root-domain configuration will be exposed in a later iteration.
+	// resolution. Root-domain configuration will be exposed in a later iteration;
+	// custom-domain resolution does not depend on it.
 	DefaultRootDomain = ""
 	// DefaultTenantCodeHeader is the login-stage tenant hint header. Authenticated
 	// business requests must not use it to override JWT TenantId.
@@ -100,6 +124,13 @@ var defaultReservedSubdomains = []string{"www", "api", "admin", "static", "docs"
 // resolution order.
 func DefaultResolverChain() []string {
 	return cloneStrings(defaultResolverChain)
+}
+
+// StorefrontResolverChain returns a detached copy of the host-only storefront
+// resolution order. Callers run it for anonymous storefront resolution; an
+// unmatched host yields a resolution error rather than the platform tenant.
+func StorefrontResolverChain() []string {
+	return cloneStrings(storefrontResolverChain)
 }
 
 // DefaultReservedSubdomains returns a detached copy of the built-in reserved

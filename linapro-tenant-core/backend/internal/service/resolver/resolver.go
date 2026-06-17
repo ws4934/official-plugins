@@ -78,6 +78,7 @@ func New(bizCtxSvc bizctxcap.Service, membershipSvc membership.Service) Service 
 	s.Register(sessionResolver{})
 	s.Register(headerResolver{})
 	s.Register(subdomainResolver{})
+	s.Register(domainResolver{})
 	s.Register(defaultResolver{membershipSvc: s.membershipSvc})
 	return s
 }

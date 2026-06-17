@@ -17,19 +17,20 @@ func (s *serviceImpl) Get(ctx context.Context) (*Config, error) {
 	return defaultConfig(), nil
 }
 
-// ToResolverConfig returns the resolver package config from built-in policy.
+// ToResolverConfig projects the code-owned resolver policy into the resolver
+// package config. It honors the policy chain (which includes the domain
+// resolver), reserved subdomains, root domain, and ambiguity behavior. The root
+// domain stays empty by default, which keeps subdomain resolution disabled until
+// an operator configures one; custom-domain resolution does not depend on it.
 func ToResolverConfig(config *Config) resolver.Config {
-	// The first linapro-tenant-core iteration intentionally keeps resolver behavior
-	// code-owned. Even if an internal caller passes an edited Config value, the
-	// active chain remains override -> jwt -> session -> header -> subdomain ->
-	// default, subdomain resolution remains disabled by the empty root domain,
-	// and ambiguous requests keep prompting for explicit tenant selection.
-	defaults := defaultConfig()
+	if config == nil {
+		config = defaultConfig()
+	}
 	return resolver.Config{
-		Chain:              cloneStrings(defaults.Chain),
-		ReservedSubdomains: cloneStrings(defaults.ReservedSubdomains),
-		RootDomain:         shared.DefaultRootDomain,
-		OnAmbiguous:        shared.OnAmbiguousPrompt,
+		Chain:              cloneStrings(config.Chain),
+		ReservedSubdomains: cloneStrings(config.ReservedSubdomains),
+		RootDomain:         config.RootDomain,
+		OnAmbiguous:        config.OnAmbiguous,
 	}
 }
 

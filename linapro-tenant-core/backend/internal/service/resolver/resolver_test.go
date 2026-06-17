@@ -46,6 +46,7 @@ func TestBuiltInResolverNames(t *testing.T) {
 		{name: "session", resolver: sessionResolver{}, expected: shared.ResolverSession},
 		{name: "header", resolver: headerResolver{}, expected: shared.ResolverHeader},
 		{name: "subdomain", resolver: subdomainResolver{}, expected: shared.ResolverSubdomain},
+		{name: "domain", resolver: domainResolver{}, expected: shared.ResolverDomain},
 		{name: "default", resolver: defaultResolver{}, expected: shared.ResolverDefault},
 	}
 
