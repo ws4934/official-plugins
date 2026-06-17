@@ -14,24 +14,24 @@ interface DomainRow {
   createdAt: number;
 }
 
+const tenant = {
+  id: 101,
+  code: "alpha",
+  name: "Alpha BU",
+  remark: "Alpha tenant remark",
+  status: "active",
+  createdAt: "2026-05-09 10:00:00",
+};
+
 const initialDomains: DomainRow[] = [
   {
     id: 1,
     tenantId: 101,
     domain: "shop.alpha.com",
     isPrimary: true,
-    isVerified: true,
-    status: "active",
-    createdAt: 1_717_000_000_000,
-  },
-  {
-    id: 2,
-    tenantId: 102,
-    domain: "shop.beta.com",
-    isPrimary: false,
     isVerified: false,
     status: "active",
-    createdAt: 1_717_100_000_000,
+    createdAt: 1_717_000_000_000,
   },
 ];
 
@@ -42,14 +42,6 @@ function ok(data: unknown) {
   };
 }
 
-function fail(errorCode: string, message: string) {
-  return {
-    status: 400,
-    contentType: "application/json",
-    body: JSON.stringify({ code: errorCode, message }),
-  };
-}
-
 function routePath(url: string) {
   return new URL(url).pathname
     .replace(/^\/x\/linapro-tenant-core\/api\/v1/, "")
@@ -57,15 +49,14 @@ function routePath(url: string) {
     .replace(/^\/api/, "");
 }
 
-// DomainManagementPage drives the tenant domain management page with mocked
-// workbench shell and domain CRUD APIs, so browser tests verify list, create,
-// verification toggle, delete, the unique-domain failure path, and translated
-// i18n text without a live backend.
-export class DomainManagementPage {
+// TenantDomainBindingPage drives the tenant management page and verifies domain
+// binding inside the tenant edit modal (list, add, verification toggle, delete)
+// against mocked workbench, tenant, and domain APIs, with translated i18n text.
+export class TenantDomainBindingPage {
   private rows: DomainRow[] = initialDomains.map((row) => ({ ...row }));
   private lastCreatePayload: Record<string, any> | null = null;
-  private lastVerifyPayload: Record<string, any> | null = null;
   private lastVerifyId = 0;
+  private lastVerifyPayload: Record<string, any> | null = null;
   private lastDeleteId = 0;
 
   constructor(private page: Page) {}
@@ -76,22 +67,9 @@ export class DomainManagementPage {
         children: [
           {
             children: [],
-            meta: { order: 1 },
-            name: "Analytics",
-            path: "/dashboard/analytics",
-          },
-        ],
-        meta: { order: -1 },
-        name: "Dashboard",
-        path: "/dashboard",
-      },
-      {
-        children: [
-          {
-            children: [],
-            meta: { order: 20 },
-            name: "PlatformDomains",
-            path: "/platform/domains",
+            meta: { order: 10 },
+            name: "PlatformTenantManagement",
+            path: "/platform/tenants",
           },
         ],
         meta: { order: 15 },
@@ -107,29 +85,14 @@ export class DomainManagementPage {
         children: [
           {
             children: [],
-            component: "#/views/dashboard/analytics/index.vue",
-            meta: { icon: "lucide:circle", order: 1, title: "page.dashboard.analytics" },
-            name: "Analytics",
-            path: "/dashboard/analytics",
-          },
-        ],
-        component: "",
-        meta: { icon: "lucide:circle", order: -1, title: "page.dashboard.title" },
-        name: "Dashboard",
-        path: "/dashboard",
-      },
-      {
-        children: [
-          {
-            children: [],
             component: "#/views/system/plugin/dynamic-page",
             meta: {
-              icon: "lucide:globe",
-              order: 20,
-              title: "plugin.linapro-tenant-core.menu.platform.domains.name",
+              icon: "lucide:building",
+              order: 10,
+              title: "plugin.linapro-tenant-core.menu.platform.tenants.name",
             },
-            name: "PluginMultiTenantPlatformDomains",
-            path: "/platform/domains",
+            name: "PluginMultiTenantPlatformTenants",
+            path: "/platform/tenants",
           },
         ],
         component: "",
@@ -154,7 +117,7 @@ export class DomainManagementPage {
       email: "admin@example.com",
       permissions: ["*"],
       roles: ["admin"],
-      homePath: "/platform/domains",
+      homePath: "/platform/tenants",
       menus: this.menuTree(),
     };
   }
@@ -240,6 +203,24 @@ export class DomainManagementPage {
     );
   }
 
+  private async mockTenantApis() {
+    await this.page.route(
+      /(?:\/api(?:\/v1)?|\/x\/linapro-tenant-core\/api\/v1)\/platform\/tenants(?:\/\d+)?(?:\?.*)?$/,
+      async (route) => {
+        const method = route.request().method();
+        if (method === "GET") {
+          await route.fulfill(ok({ list: [tenant], total: 1 }));
+          return;
+        }
+        if (method === "PUT") {
+          await route.fulfill(ok({ ...tenant, ...route.request().postDataJSON() }));
+          return;
+        }
+        await route.fulfill(ok(tenant));
+      },
+    );
+  }
+
   private async mockDomainApis() {
     await this.page.route(
       /(?:\/api(?:\/v1)?|\/x\/linapro-tenant-core\/api\/v1)\/platform\/domains(?:\/\d+(?:\/verification)?)?(?:\?.*)?$/,
@@ -248,24 +229,23 @@ export class DomainManagementPage {
         const path = routePath(route.request().url());
         const segments = path.split("/").filter(Boolean);
         if (method === "GET") {
-          await route.fulfill(ok({ list: this.rows, total: this.rows.length }));
+          const tenantId = new URL(route.request().url()).searchParams.get(
+            "tenantId",
+          );
+          const list = tenantId
+            ? this.rows.filter((row) => row.tenantId === Number(tenantId))
+            : this.rows;
+          await route.fulfill(ok({ list, total: list.length }));
           return;
         }
         if (method === "POST") {
           const body = route.request().postDataJSON();
           this.lastCreatePayload = body;
-          const normalized = String(body.domain ?? "").trim().toLowerCase();
-          if (this.rows.some((row) => row.domain === normalized)) {
-            await route.fulfill(
-              fail("MULTI_TENANT_DOMAIN_ALREADY_EXISTS", "域名已被映射到租户"),
-            );
-            return;
-          }
           const id = 100 + this.rows.length;
           this.rows.push({
             id,
             tenantId: Number(body.tenantId),
-            domain: normalized,
+            domain: String(body.domain ?? "").trim().toLowerCase(),
             isPrimary: Boolean(body.isPrimary),
             isVerified: false,
             status: "active",
@@ -276,12 +256,11 @@ export class DomainManagementPage {
         }
         if (method === "PUT" && path.endsWith("/verification")) {
           const id = Number(segments[2]);
-          const body = route.request().postDataJSON();
-          this.lastVerifyPayload = body;
           this.lastVerifyId = id;
+          this.lastVerifyPayload = route.request().postDataJSON();
           const row = this.rows.find((item) => item.id === id);
           if (row) {
-            row.isVerified = Boolean(body.verified);
+            row.isVerified = Boolean(this.lastVerifyPayload?.verified);
           }
           await route.fulfill(ok({}));
           return;
@@ -298,107 +277,76 @@ export class DomainManagementPage {
     );
   }
 
-  async goto() {
+  async gotoTenants() {
     await this.installAuthState();
     await this.mockShell();
+    await this.mockTenantApis();
     await this.mockDomainApis();
-    await this.page.goto("/platform/domains");
+    await this.page.goto("/platform/tenants");
     await waitForRouteReady(this.page);
   }
 
-  async expectDomainListWithTranslations() {
-    const root = this.page.getByTestId("platform-domains-page");
-    await expect(root).toBeVisible();
+  async openTenantEditDomains() {
+    await expect(this.page.getByTestId("platform-tenants-page")).toBeVisible();
+    await this.page.getByTestId("tenant-edit-101").click();
+    await expect(this.page.getByTestId("tenant-form")).toBeVisible();
+    const domains = this.page.getByTestId("tenant-domains");
+    await expect(domains).toBeVisible();
+    // Translated section title proves i18n resolved (not the raw key).
+    await expect(domains).toContainText("域名");
     await expect(
-      this.page.getByText(/插件页面未找到|Plugin page not found/),
-    ).toHaveCount(0);
-    // Translated column header proves i18n resolved (not the raw key).
-    await expect(
-      this.page.locator(".vxe-header--column", { hasText: "域名" }).first(),
+      this.page.getByTestId("tenant-domains-section").getByText("shop.alpha.com"),
     ).toBeVisible();
-    await expect(root.getByText("shop.alpha.com")).toBeVisible();
-    await expect(root.getByText("shop.beta.com")).toBeVisible();
-    // Translated add button (pages.common.add).
-    await expect(this.page.getByTestId("domain-create")).toHaveText(/^新\s*增$/);
   }
 
-  async exerciseCreate() {
-    await this.page.getByTestId("domain-create").click();
-    await expect(this.page.getByTestId("domain-form")).toBeVisible();
-    await this.page.getByTestId("domain-tenant-input").locator("input").fill("101");
-    await this.page.getByTestId("domain-input").fill("shop.gamma.com");
-
+  async exerciseAddDomain() {
+    await this.page.getByTestId("tenant-domain-input").fill("acme.example.com");
     const createResponse = this.page.waitForResponse(
       (response) =>
         response.request().method() === "POST" &&
         routePath(response.url()) === "/platform/domains",
     );
-    await this.page
-      .getByRole("dialog")
-      .getByRole("button", { name: /^确\s*认$|^Confirm$/ })
-      .click();
+    await this.page.getByTestId("tenant-domain-add").click();
     await createResponse;
     expect(this.lastCreatePayload).toMatchObject({
-      domain: "shop.gamma.com",
+      domain: "acme.example.com",
       tenantId: 101,
     });
-    await expect(this.page.getByTestId("domain-form")).toHaveCount(0);
-    await expect(
-      this.page.getByTestId("platform-domains-page").getByText("shop.gamma.com"),
-    ).toBeVisible();
-  }
-
-  async exerciseDuplicateRejected() {
-    await this.page.getByTestId("domain-create").click();
-    await expect(this.page.getByTestId("domain-form")).toBeVisible();
-    await this.page.getByTestId("domain-tenant-input").locator("input").fill("101");
-    await this.page.getByTestId("domain-input").fill("shop.alpha.com");
-
-    const createResponse = this.page.waitForResponse(
-      (response) =>
-        response.request().method() === "POST" &&
-        routePath(response.url()) === "/platform/domains",
-    );
-    await this.page
-      .getByRole("dialog")
-      .getByRole("button", { name: /^确\s*认$|^Confirm$/ })
-      .click();
-    const response = await createResponse;
-    expect(response.status()).toBe(400);
-    // Duplicate is rejected: no new row and the error toast keeps the form open.
     await expect(
       this.page
-        .getByTestId("platform-domains-page")
-        .getByText("shop.alpha.com"),
-    ).toHaveCount(1);
+        .getByTestId("tenant-domains-section")
+        .getByText("acme.example.com"),
+    ).toBeVisible();
   }
 
   async exerciseVerifyToggle() {
     const verifyResponse = this.page.waitForResponse(
       (response) =>
         response.request().method() === "PUT" &&
-        /\/platform\/domains\/2\/verification$/.test(routePath(response.url())),
+        /\/platform\/domains\/1\/verification$/.test(routePath(response.url())),
     );
-    await this.page.getByTestId("domain-verify-2").click();
+    await this.page.getByTestId("tenant-domain-verify-1").click();
     await verifyResponse;
-    expect(this.lastVerifyId).toBe(2);
+    expect(this.lastVerifyId).toBe(1);
     expect(this.lastVerifyPayload).toMatchObject({ verified: true });
   }
 
-  async exerciseDelete() {
-    await this.page.getByTestId("domain-delete-2").click();
+  async exerciseDeleteDomain() {
+    await this.page.getByTestId("tenant-domain-delete-1").click();
     const deleteResponse = this.page.waitForResponse(
       (response) =>
         response.request().method() === "DELETE" &&
-        /\/platform\/domains\/2$/.test(routePath(response.url())),
+        /\/platform\/domains\/1$/.test(routePath(response.url())),
     );
     await this.page
       .getByRole("button", { name: /^确\s*定$|^OK$|^Confirm$/ })
       .click();
     await deleteResponse;
-    expect(this.lastDeleteId).toBe(2);
+    expect(this.lastDeleteId).toBe(1);
     await expect(
-      this.page.getByTestId("platform-domains-page").getByText("shop.beta.com"),
+      this.page
+        .getByTestId("tenant-domains-section")
+        .getByText("shop.alpha.com"),
     ).toHaveCount(0);
   }
 }

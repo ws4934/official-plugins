@@ -14,6 +14,7 @@ import {
   platformTenantCreate,
   platformTenantUpdate,
 } from '../tenant-client';
+import TenantDomainsSection from './tenant-domains-section.vue';
 
 const emit = defineEmits<{ success: [] }>();
 
@@ -158,6 +159,12 @@ async function handleClosed() {
   <Modal :title="title">
     <div data-testid="tenant-form">
       <TenantForm />
+    </div>
+    <div v-if="isEdit" class="mt-2" data-testid="tenant-domains">
+      <div class="mb-2 text-sm font-medium">
+        {{ $t('pages.multiTenant.domain.sectionTitle') }}
+      </div>
+      <TenantDomainsSection :tenant-id="recordId" />
     </div>
   </Modal>
 </template>
