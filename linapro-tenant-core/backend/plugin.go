@@ -13,6 +13,7 @@ import (
 	platformcontroller "lina-plugin-linapro-tenant-core/backend/internal/controller/platform"
 	tenantcontroller "lina-plugin-linapro-tenant-core/backend/internal/controller/tenant"
 	"lina-plugin-linapro-tenant-core/backend/internal/provider/tenantadapter"
+	domainsvc "lina-plugin-linapro-tenant-core/backend/internal/service/domain"
 	"lina-plugin-linapro-tenant-core/backend/internal/service/impersonate"
 	"lina-plugin-linapro-tenant-core/backend/internal/service/lifecycleprecondition"
 	"lina-plugin-linapro-tenant-core/backend/internal/service/membership"
@@ -130,6 +131,7 @@ func registerRoutes(ctx context.Context, registrar pluginhost.HTTPRegistrar) err
 		tenantPluginSvc   = tenantplugin.New(services.BizCtx(), pluginLifecycleSvc, services.Plugins(), services.Admin().Plugins())
 		tenantSvc         = tenantsvc.New(services.BizCtx(), resolverConfigSvc, tenantPluginSvc, pluginLifecycleSvc)
 		resolverSvc       = resolver.New(services.BizCtx(), membershipSvc)
+		domainSvc         = domainsvc.New(services.BizCtx())
 	)
 	providerSvc, err := provider.New(membershipSvc, resolverSvc, resolverConfigSvc, tenantPluginSvc)
 	if err != nil {
@@ -162,7 +164,7 @@ func registerRoutes(ctx context.Context, registrar pluginhost.HTTPRegistrar) err
 				group.Bind(
 					authCtrl.LoginTenants,
 					authCtrl.SwitchTenant,
-					platformcontroller.NewV1(tenantSvc, impersonateSvc),
+					platformcontroller.NewV1(tenantSvc, impersonateSvc, domainSvc),
 					tenantcontroller.NewV1(tenantPluginSvc),
 				)
 			})

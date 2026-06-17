@@ -11,6 +11,10 @@ import (
 )
 
 type IPlatformV1 interface {
+	DomainList(ctx context.Context, req *v1.DomainListReq) (res *v1.DomainListRes, err error)
+	DomainCreate(ctx context.Context, req *v1.DomainCreateReq) (res *v1.DomainCreateRes, err error)
+	DomainDelete(ctx context.Context, req *v1.DomainDeleteReq) (res *v1.DomainDeleteRes, err error)
+	DomainVerify(ctx context.Context, req *v1.DomainVerifyReq) (res *v1.DomainVerifyRes, err error)
 	TenantList(ctx context.Context, req *v1.TenantListReq) (res *v1.TenantListRes, err error)
 	TenantCreate(ctx context.Context, req *v1.TenantCreateReq) (res *v1.TenantCreateRes, err error)
 	TenantDelete(ctx context.Context, req *v1.TenantDeleteReq) (res *v1.TenantDeleteRes, err error)

@@ -9,6 +9,7 @@ import (
 	"lina-core/pkg/apitime"
 	platformapi "lina-plugin-linapro-tenant-core/backend/api/platform"
 	v1 "lina-plugin-linapro-tenant-core/backend/api/platform/v1"
+	domainsvc "lina-plugin-linapro-tenant-core/backend/internal/service/domain"
 	"lina-plugin-linapro-tenant-core/backend/internal/service/impersonate"
 	tenantsvc "lina-plugin-linapro-tenant-core/backend/internal/service/tenant"
 )
@@ -17,13 +18,15 @@ import (
 type ControllerV1 struct {
 	tenantSvc      tenantsvc.Service
 	impersonateSvc impersonate.Service
+	domainSvc      domainsvc.Service
 }
 
 // NewV1 creates and returns a new platform controller instance.
-func NewV1(tenantSvc tenantsvc.Service, impersonateSvc impersonate.Service) platformapi.IPlatformV1 {
+func NewV1(tenantSvc tenantsvc.Service, impersonateSvc impersonate.Service, domainSvc domainsvc.Service) platformapi.IPlatformV1 {
 	return &ControllerV1{
 		tenantSvc:      tenantSvc,
 		impersonateSvc: impersonateSvc,
+		domainSvc:      domainSvc,
 	}
 }
 
@@ -39,5 +42,21 @@ func toAPITenant(item *tenantsvc.Entity) *v1.TenantItem {
 		Status:    item.Status,
 		Remark:    item.Remark,
 		CreatedAt: apitime.MilliFromString(item.CreatedAt),
+	}
+}
+
+// toAPIDomain converts a service domain mapping into an API domain DTO.
+func toAPIDomain(item *domainsvc.Entity) *v1.DomainItem {
+	if item == nil {
+		return nil
+	}
+	return &v1.DomainItem{
+		Id:         item.Id,
+		TenantId:   item.TenantId,
+		Domain:     item.Domain,
+		IsPrimary:  item.IsPrimary,
+		IsVerified: item.IsVerified,
+		Status:     item.Status,
+		CreatedAt:  apitime.MilliFromString(item.CreatedAt),
 	}
 }
