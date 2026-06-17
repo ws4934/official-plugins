@@ -26,6 +26,18 @@
     },
     "plugin:linapro-tenant-core:tenant:plugin:list": {
       "title": "List"
+    },
+    "plugin:linapro-tenant-core:platform:domains": {
+      "title": "Domains"
+    },
+    "plugin:linapro-tenant-core:platform:domains:add": {
+      "title": "Create"
+    },
+    "plugin:linapro-tenant-core:platform:domains:remove": {
+      "title": "Delete"
+    },
+    "plugin:linapro-tenant-core:platform:domains:verify": {
+      "title": "Verify"
     }
   }
 }

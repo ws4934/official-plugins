@@ -215,39 +215,42 @@ menus:
     type: B
     visible: 0
     sort: 123
-  # Hidden permission point for listing tenant domains.
-  # 租户域名列表隐藏权限点，仅用于 API 授权，前端域名管理页落地后再展示菜单。
-  - key: plugin:linapro-tenant-core:platform:domains:list
+  # Tenant domain management menu page mounted under the host platform directory.
+  # 域名管理菜单页，挂载在宿主内置平台管理目录下，用动态页壳承载插件自有页面。
+  - key: plugin:linapro-tenant-core:platform:domains
     parent_key: platform
-    name: 租户域名列表
+    name: 域名管理
+    path: /platform/domains
+    component: system/plugin/dynamic-page
     perms: system:tenant:domain:list
-    type: B
-    visible: 0
-    sort: 131
-  # Hidden permission point for creating tenant domains.
-  # 租户域名新增隐藏权限点，仅用于 API 授权。
+    icon: lucide:globe
+    type: M
+    sort: 20
+    remark: 多租户插件-租户域名管理
+  # Button permission for creating tenant domains.
+  # 租户域名新增按钮权限，挂载在域名管理菜单下。
   - key: plugin:linapro-tenant-core:platform:domains:add
-    parent_key: platform
+    parent_key: plugin:linapro-tenant-core:platform:domains
     name: 租户域名新增
     perms: system:tenant:domain:add
     type: B
     visible: 0
-    sort: 132
-  # Hidden permission point for deleting tenant domains.
-  # 租户域名删除隐藏权限点，仅用于 API 授权。
+    sort: 1
+  # Button permission for deleting tenant domains.
+  # 租户域名删除按钮权限，挂载在域名管理菜单下。
   - key: plugin:linapro-tenant-core:platform:domains:remove
-    parent_key: platform
+    parent_key: plugin:linapro-tenant-core:platform:domains
     name: 租户域名删除
     perms: system:tenant:domain:remove
     type: B
     visible: 0
-    sort: 133
-  # Hidden permission point for setting tenant domain verification.
-  # 租户域名验证隐藏权限点，仅用于 API 授权。
+    sort: 2
+  # Button permission for setting tenant domain verification.
+  # 租户域名验证按钮权限，挂载在域名管理菜单下。
   - key: plugin:linapro-tenant-core:platform:domains:verify
-    parent_key: platform
+    parent_key: plugin:linapro-tenant-core:platform:domains
     name: 租户域名验证
     perms: system:tenant:domain:verify
     type: B
     visible: 0
-    sort: 134
+    sort: 3

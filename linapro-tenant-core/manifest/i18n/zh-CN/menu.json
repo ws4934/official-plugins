@@ -26,6 +26,18 @@
     },
     "plugin:linapro-tenant-core:tenant:plugin:list": {
       "title": "租户插件列表"
+    },
+    "plugin:linapro-tenant-core:platform:domains": {
+      "title": "域名管理"
+    },
+    "plugin:linapro-tenant-core:platform:domains:add": {
+      "title": "租户域名新增"
+    },
+    "plugin:linapro-tenant-core:platform:domains:remove": {
+      "title": "租户域名删除"
+    },
+    "plugin:linapro-tenant-core:platform:domains:verify": {
+      "title": "租户域名验证"
     }
   }
 }
